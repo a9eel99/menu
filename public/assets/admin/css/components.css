@@ -1,0 +1,778 @@
+/**
+ * QR Menu - Admin Shared Components
+ * Version: 1.0
+ * 
+ * هذا الملف يحتوي على كل الـ CSS المشترك بين صفحات الأدمن
+ * الصفحات تستخدم الـ classes مباشرة بدون تكرار
+ */
+
+/* ==========================================
+   Breadcrumb Modern
+   مستخدم في: كل الصفحات
+   ========================================== */
+.breadcrumb-modern {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    flex-wrap: wrap;
+}
+
+.breadcrumb-modern a {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.breadcrumb-modern a:hover {
+    color: var(--primary);
+}
+
+.breadcrumb-modern span {
+    color: #94a3b8;
+}
+
+.breadcrumb-modern .current {
+    color: #0f172a;
+    font-weight: 500;
+}
+
+/* ==========================================
+   Page Containers
+   مستخدم في: create, edit pages
+   ========================================== */
+.create-page {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.create-page.wide {
+    max-width: 900px;
+}
+
+.edit-page {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.edit-page.wide {
+    max-width: 900px;
+}
+
+/* ==========================================
+   Form Card
+   مستخدم في: create, edit pages
+   ========================================== */
+.form-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    border: 1px solid #f1f5f9;
+}
+
+.form-card-header {
+    padding: 20px 24px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary) 100%);
+    color: white;
+}
+
+.form-card-header h5 {
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-card-header small {
+    opacity: 0.8;
+    font-weight: 400;
+}
+
+.form-card-body {
+    padding: 24px;
+}
+
+/* ==========================================
+   Form Elements Enhanced
+   مستخدم في: كل الفورمات
+   ========================================== */
+.form-label .required {
+    color: #ef4444;
+}
+
+.form-control-custom,
+.form-select-custom {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.form-control-custom:focus,
+.form-select-custom:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* ==========================================
+   Icon Preview Box
+   مستخدم في: categories create/edit
+   ========================================== */
+.icon-preview-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 12px;
+    margin-top: 12px;
+}
+
+.icon-preview-box i {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.icon-preview-box span {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+/* ==========================================
+   Image Upload Area
+   مستخدم في: categories, items, restaurants, staff
+   ========================================== */
+.image-upload-area {
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.image-upload-area:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.image-upload-area input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.image-upload-area i {
+    font-size: 2.5rem;
+    color: #94a3b8;
+    margin-bottom: 12px;
+}
+
+.image-upload-area p {
+    color: #64748b;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.image-upload-area small {
+    color: #94a3b8;
+}
+
+/* ==========================================
+   Image Preview
+   مستخدم في: categories, items, restaurants
+   ========================================== */
+.image-preview {
+    margin-top: 16px;
+    display: none;
+}
+
+.image-preview img {
+    max-height: 150px;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+}
+
+.image-preview.show {
+    display: block;
+}
+
+/* ==========================================
+   Current Image (Edit Pages)
+   مستخدم في: edit pages
+   ========================================== */
+.current-image {
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.current-image img {
+    max-height: 80px;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+}
+
+.current-image .remove-image {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #ef4444;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* ==========================================
+   Switch Wrapper
+   مستخدم في: categories, items, staff
+   ========================================== */
+.switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.switch-wrapper label {
+    font-weight: 500;
+    color: #374151;
+    margin: 0;
+    cursor: pointer;
+}
+
+.form-switch .form-check-input {
+    width: 48px;
+    height: 26px;
+    cursor: pointer;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* ==========================================
+   Switches Grid (Multiple switches)
+   مستخدم في: items create/edit
+   ========================================== */
+.switches-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+@media (max-width: 576px) {
+    .switches-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.switches-grid .switch-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.switches-grid .switch-item label {
+    font-weight: 500;
+    color: #374151;
+    margin: 0;
+    cursor: pointer;
+}
+
+.switches-grid .switch-item label i {
+    color: #f59e0b;
+}
+
+.switches-grid .switch-item small {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    font-weight: 400;
+}
+
+/* ==========================================
+   Tags Wrapper
+   مستخدم في: items create/edit
+   ========================================== */
+.tags-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.tag-checkbox {
+    display: none;
+}
+
+.tag-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.tag-checkbox:checked + .tag-label {
+    border-color: currentColor;
+    transform: scale(1.05);
+}
+
+/* Tag Colors */
+.tag-label.new { background: #dbeafe; color: #1d4ed8; }
+.tag-label.spicy { background: #fee2e2; color: #dc2626; }
+.tag-label.popular { background: #fef3c7; color: #d97706; }
+.tag-label.vegetarian { background: #d1fae5; color: #059669; }
+.tag-label.vegan { background: #d1fae5; color: #047857; }
+.tag-label.gluten-free { background: #fae8ff; color: #a855f7; }
+
+/* ==========================================
+   Price Input Group
+   مستخدم في: items create/edit
+   ========================================== */
+.price-input-group {
+    position: relative;
+}
+
+.price-input-group .currency-badge {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #f1f5f9;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+[dir="rtl"] .price-input-group .currency-badge {
+    left: 12px;
+}
+
+[dir="ltr"] .price-input-group .currency-badge {
+    right: 12px;
+}
+
+[dir="rtl"] .price-input-group input {
+    padding-left: 70px;
+}
+
+[dir="ltr"] .price-input-group input {
+    padding-right: 70px;
+}
+
+/* ==========================================
+   Section Title
+   مستخدم في: items create/edit
+   ========================================== */
+.section-title {
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title i {
+    color: var(--primary);
+}
+
+/* ==========================================
+   Form Actions (Buttons)
+   مستخدم في: كل الفورمات
+   ========================================== */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.form-actions.spread {
+    justify-content: space-between;
+}
+
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: var(--primary);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-save:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    color: #64748b;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+    border-color: #cbd5e1;
+    color: #475569;
+}
+
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: white;
+    border: 1.5px solid #fecaca;
+    border-radius: 10px;
+    color: #ef4444;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+    background: #fef2f2;
+    border-color: #ef4444;
+}
+
+/* ==========================================
+   Info Box
+   مستخدم في: staff, copy menu
+   ========================================== */
+.info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: #f0f9ff;
+    border-radius: 12px;
+    border: 1px solid #bae6fd;
+    margin-bottom: 20px;
+}
+
+.info-box i {
+    color: #0284c7;
+    font-size: 1.1rem;
+    margin-top: 2px;
+}
+
+.info-box-content h6 {
+    color: #0369a1;
+    margin: 0 0 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.info-box-content p,
+.info-box p {
+    color: #0369a1;
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+/* ==========================================
+   Role Selection Cards
+   مستخدم في: staff create/edit
+   ========================================== */
+.role-selection {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 576px) {
+    .role-selection {
+        grid-template-columns: 1fr;
+    }
+}
+
+.role-option {
+    position: relative;
+}
+
+.role-option input {
+    position: absolute;
+    opacity: 0;
+}
+
+.role-option label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.role-option input:checked + label {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.role-option:hover label {
+    border-color: var(--primary);
+}
+
+.role-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.role-icon.admin {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.role-icon.employee {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.role-info h6 {
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 2px;
+}
+
+.role-info p {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* ==========================================
+   Meta Card (Edit pages - timestamps)
+   مستخدم في: staff edit
+   ========================================== */
+.meta-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 20px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.meta-item:not(:last-child) {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.meta-item i {
+    color: #94a3b8;
+    width: 20px;
+}
+
+.meta-item span {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.meta-item strong {
+    color: #374151;
+    font-weight: 500;
+}
+
+/* ==========================================
+   Type Selection (Restaurant create)
+   مستخدم في: restaurants create
+   ========================================== */
+.type-selection {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 576px) {
+    .type-selection {
+        grid-template-columns: 1fr;
+    }
+}
+
+.type-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.type-option input {
+    position: absolute;
+    opacity: 0;
+}
+
+.type-option-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.type-option input:checked + .type-option-content {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.type-option:hover .type-option-content {
+    border-color: var(--primary);
+}
+
+.type-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.type-icon.main {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.type-icon.branch {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.type-info h6 {
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.type-info p {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.parent-select-wrapper {
+    margin-top: 20px;
+    display: none;
+}
+
+.parent-select-wrapper.show {
+    display: block;
+}
+
+/* ==========================================
+   Form Card Alternate Header
+   مستخدم في: restaurants create/edit
+   ========================================== */
+.form-card-header-alt {
+    padding: 18px 24px;
+    background: #f8fafc;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #0f172a;
+}
+
+.form-card-header-alt i {
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+/* ==========================================
+   Form Hint
+   ========================================== */
+.form-hint {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 6px;
+}
+
+/* ==========================================
+   Back Button
+   ========================================== */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    color: #64748b;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+    border-color: #cbd5e1;
+    color: #475569;
+}
