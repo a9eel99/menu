@@ -79,8 +79,8 @@ $restaurants = Restaurant::whereNull('parent_id')
             'currency_symbol' => 'nullable|string|max:10',
             'primary_color' => 'nullable|string|max:20',
             'secondary_color' => 'nullable|string|max:20',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             'menu_type' => 'nullable|in:digital,pdf',
             'menu_pdf' => 'nullable|file|mimes:pdf|max:30720',
         ]);
@@ -175,8 +175,8 @@ $restaurants = Restaurant::whereNull('parent_id')
             'currency_symbol' => 'nullable|string|max:10',
             'primary_color' => 'nullable|string|max:20',
             'secondary_color' => 'nullable|string|max:20',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             'menu_type' => 'nullable|in:digital,pdf',
             'menu_pdf' => 'nullable|file|mimes:pdf|max:30720',
         ]);
@@ -276,7 +276,7 @@ $restaurants = Restaurant::whereNull('parent_id')
         $type = $request->input('type'); // logo or cover
 
         if ($type === 'logo' && $request->hasFile('image')) {
-            $request->validate(['image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048']);
+            $request->validate(['image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:20480']);
 
             if ($restaurant->logo) {
                 Storage::disk('public')->delete($restaurant->logo);
@@ -291,7 +291,7 @@ $restaurants = Restaurant::whereNull('parent_id')
         }
 
         if ($type === 'cover' && $request->hasFile('image')) {
-            $request->validate(['image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048']);
+            $request->validate(['image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:20480']);
 
             if ($restaurant->cover_image) {
                 Storage::disk('public')->delete($restaurant->cover_image);

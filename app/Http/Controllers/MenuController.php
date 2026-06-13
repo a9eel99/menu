@@ -10,7 +10,7 @@ class MenuController extends Controller
     /**
      * عرض صفحة Landing للمطعم
      */
-    public function landing($slug)
+    public function landing($slug, Request $request)
     {
         $restaurant = Restaurant::where('slug', $slug)
             ->where('is_active', true)
@@ -18,7 +18,10 @@ class MenuController extends Controller
                 'socialLinks' => function ($query) {
                     $query->where('is_active', true)->orderBy('sort_order');
                 },
-                'parent'
+                'parent',
+                'landingButtons' => function ($query) {
+                    $query->where('is_active', true)->orderBy('sort_order');
+                }
             ])
             ->firstOrFail();
 
@@ -28,7 +31,18 @@ class MenuController extends Controller
         session(['current_menu_locale' => $locale]);
         app()->setLocale($locale);
 
-        return view('menu.landing', compact('restaurant', 'locale'));
+        // التحقق من المطاعم المرتبطة وعرض صفحة الاختيار
+        if ($restaurant->show_linked_selector &&
+            $restaurant->hasLinkedRestaurants() &&
+            !$request->has('direct')) {
+            $linkedRestaurants = $restaurant->allLinkedRestaurants();
+            return view('menu.selector', compact('restaurant', 'locale', 'linkedRestaurants'));
+        }
+
+        // إنشاء الأزرار الافتراضية إذا لم تكن موجودة
+        $landingButtons = $restaurant->getOrCreateLandingButtons()->where('is_active', true);
+
+        return view('menu.landing', compact('restaurant', 'locale', 'landingButtons'));
     }
 
     /**
@@ -108,6 +122,28 @@ class MenuController extends Controller
             ->get();
 
         return view('menu.show', compact('restaurant', 'categories', 'featuredItems', 'locale'));
+    }
+
+    /**
+     * عرض صفحة الفروع
+     */
+    public function branches($slug)
+    {
+        $restaurant = Restaurant::where('slug', $slug)
+            ->where('is_active', true)
+            ->with(['activeBranches'])
+            ->firstOrFail();
+
+        if (!$restaurant->isMain() || $restaurant->activeBranches->count() === 0) {
+            return redirect()->route('menu.landing', $slug);
+        }
+
+        $localeKey = 'locale_' . $restaurant->id;
+        $locale = session($localeKey, 'ar');
+        session(['current_menu_locale' => $locale]);
+        app()->setLocale($locale);
+
+        return view('menu.branches', compact('restaurant', 'locale'));
     }
 
     /**

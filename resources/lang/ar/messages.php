@@ -21,4 +21,9 @@ return [
     'prices_updated' => 'تم تحديث الأسعار',
     'branch_items_updated' => 'تم تحديث أصناف الفرع بنجاح',
     'menu_copied' => 'تم نسخ المنيو بنجاح',
+    'updated_successfully' => 'تم التحديث بنجاح',
+    'order_updated' => 'تم تحديث الترتيب',
+    'restaurants_linked' => 'تم ربط المطاعم بنجاح',
+    'restaurant_unlinked' => 'تم إلغاء ربط المطعم',
+    'invalid_operation' => 'عملية غير صالحة',
 ];

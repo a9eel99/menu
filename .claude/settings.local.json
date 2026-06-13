@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(php artisan *)"
+      "Bash(php artisan *)",
+      "Bash(Select-Object -Last 50)",
+      "Bash(git add *)"
     ]
   }
 }

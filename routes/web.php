@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\MenuItemController;
 use App\Http\Controllers\Admin\SocialLinkController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\LandingButtonController;
+use App\Http\Controllers\Admin\LinkedRestaurantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +112,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         
         // Restaurant Social Links
         Route::put('/restaurants/{restaurant}/social', [SocialLinkController::class, 'updateForRestaurant'])->name('restaurants.social.update');
+
+        // Landing Buttons
+        Route::get('/restaurants/{restaurant}/landing-buttons', [LandingButtonController::class, 'index'])->name('landing-buttons.index');
+        Route::put('/restaurants/{restaurant}/landing-buttons/{button}', [LandingButtonController::class, 'update'])->name('landing-buttons.update');
+        Route::post('/restaurants/{restaurant}/landing-buttons/reorder', [LandingButtonController::class, 'reorder'])->name('landing-buttons.reorder');
+        Route::patch('/restaurants/{restaurant}/landing-buttons/{button}/toggle', [LandingButtonController::class, 'toggle'])->name('landing-buttons.toggle');
+
+        // Linked Restaurants
+        Route::get('/restaurants/{restaurant}/linked', [LinkedRestaurantController::class, 'index'])->name('linked-restaurants.index');
+        Route::post('/restaurants/{restaurant}/linked', [LinkedRestaurantController::class, 'link'])->name('linked-restaurants.link');
+        Route::delete('/restaurants/{restaurant}/linked/{linked}', [LinkedRestaurantController::class, 'unlink'])->name('linked-restaurants.unlink');
+        Route::patch('/restaurants/{restaurant}/linked/toggle', [LinkedRestaurantController::class, 'toggleSelector'])->name('linked-restaurants.toggle');
     });
     
     // قائمة المطاعم - للأدمن فقط
@@ -128,4 +142,5 @@ Route::get('/{slug}', [MenuController::class, 'landing'])->name('menu.landing');
 Route::get('/{slug}/menu', [MenuController::class, 'show'])->name('menu.show');
 Route::get('/{slug}/menu/pdf', [MenuController::class, 'showPdf'])->name('menu.pdf');
 Route::get('/{slug}/menu/digital', [MenuController::class, 'showDigital'])->name('menu.digital');
+Route::get('/{slug}/branches', [MenuController::class, 'branches'])->name('menu.branches');
 Route::post('/{slug}/language', [MenuController::class, 'switchLanguage'])->name('menu.language');

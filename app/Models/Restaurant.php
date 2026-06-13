@@ -13,6 +13,8 @@ class Restaurant extends Model
     protected $fillable = [
         'user_id',
         'parent_id',
+        'linked_group_id',
+        'show_linked_selector',
         'name_ar',
         'name_en',
         'slug',
@@ -40,6 +42,7 @@ class Restaurant extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'show_linked_selector' => 'boolean',
     ];
 
     protected $attributes = [
@@ -118,6 +121,53 @@ class Restaurant extends Model
     public function socialLinks()
     {
         return $this->hasMany(SocialLink::class);
+    }
+
+    public function landingButtons()
+    {
+        return $this->hasMany(LandingButton::class)->orderBy('sort_order');
+    }
+
+    public function activeLandingButtons()
+    {
+        return $this->landingButtons()->where('is_active', true);
+    }
+
+    public function getOrCreateLandingButtons()
+    {
+        if ($this->landingButtons()->count() === 0) {
+            foreach (LandingButton::getDefaultButtons() as $button) {
+                $this->landingButtons()->create($button);
+            }
+        }
+        return $this->landingButtons()->orderBy('sort_order')->get();
+    }
+
+    public function linkedRestaurants()
+    {
+        if (!$this->linked_group_id) {
+            return collect();
+        }
+        return static::where('linked_group_id', $this->linked_group_id)
+            ->where('is_active', true)
+            ->where('id', '!=', $this->id)
+            ->get();
+    }
+
+    public function allLinkedRestaurants()
+    {
+        if (!$this->linked_group_id) {
+            return collect([$this]);
+        }
+        return static::where('linked_group_id', $this->linked_group_id)
+            ->where('is_active', true)
+            ->orderBy('name_ar')
+            ->get();
+    }
+
+    public function hasLinkedRestaurants()
+    {
+        return $this->linked_group_id && $this->linkedRestaurants()->count() > 0;
     }
 
     // ==================== Helpers ====================

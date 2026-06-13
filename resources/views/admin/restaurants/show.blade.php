@@ -816,7 +816,15 @@
         </div>
         
         <div class="hero-actions">
-            <a href="{{ route('admin.restaurants.copy', $restaurant) }}" class="hero-btn primary">
+            <a href="{{ route('admin.landing-buttons.index', $restaurant) }}" class="hero-btn primary">
+                <i class="fas fa-th-list"></i>
+                {{ __('app.landing_buttons') }}
+            </a>
+            <a href="{{ route('admin.linked-restaurants.index', $restaurant) }}" class="hero-btn light">
+                <i class="fas fa-link"></i>
+                {{ __('app.linked_restaurants') }}
+            </a>
+            <a href="{{ route('admin.restaurants.copy', $restaurant) }}" class="hero-btn light">
                 <i class="fas fa-copy"></i>
                 {{ __('app.copy_menu') }}
             </a>

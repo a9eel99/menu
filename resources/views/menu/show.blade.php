@@ -200,7 +200,7 @@
             gap: 8px;
         }
         
-        .section-title i { color: #FFD700; }
+        .section-title i { color: var(--primary); }
         
         .featured-scroll {
             display: flex;
@@ -346,7 +346,7 @@
             justify-content: center;
             width: 20px;
             height: 20px;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: var(--primary);
             border-radius: 50%;
             flex-shrink: 0;
         }
@@ -378,7 +378,7 @@
         }
         
         .discount-badge {
-            background: #ff4757;
+            background: var(--primary);
             color: white;
             padding: 2px 8px;
             border-radius: 10px;

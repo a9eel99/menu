@@ -172,7 +172,7 @@
             font-size: 0.9rem;
         }
         
-        .rating-badge i { color: #fbbf24; }
+        .rating-badge i { color: var(--primary); }
         
         /* Links Section */
         .links-section {
@@ -182,57 +182,58 @@
         .link-card {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             background: var(--card-bg);
             backdrop-filter: blur(10px);
-            padding: 18px 22px;
-            border-radius: 16px;
-            margin-bottom: 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            margin-bottom: 10px;
             text-decoration: none;
             color: var(--text);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border: 1px solid rgba(255,255,255,0.8);
         }
-        
+
         .link-card:hover {
             transform: translateY(-3px) scale(1.01);
             box-shadow: 0 12px 30px rgba(0,0,0,0.12);
         }
-        
+
         .link-card:active {
             transform: scale(0.98);
         }
-        
+
         .link-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 14px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             flex-shrink: 0;
         }
-        
+
         .link-icon.menu { background: linear-gradient(135deg, var(--primary), {{ $primaryColor }}cc); color: white; }
-        .link-icon.location { background: linear-gradient(135deg, #ef4444, #f87171); color: white; }
-        .link-icon.phone { background: linear-gradient(135deg, #10b981, #34d399); color: white; }
-                .link-icon.review { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
+        .link-icon.location { background: linear-gradient(135deg, var(--primary), {{ $primaryColor }}cc); color: white; }
+        .link-icon.phone { background: linear-gradient(135deg, var(--primary), {{ $primaryColor }}cc); color: white; }
+        .link-icon.reviews { background: linear-gradient(135deg, var(--primary), {{ $primaryColor }}cc); color: white; }
+        .link-icon.branches { background: linear-gradient(135deg, var(--primary), {{ $primaryColor }}cc); color: white; }
         
         .link-content {
             flex: 1;
         }
         
         .link-title {
-            font-weight: 700;
-            font-size: 1rem;
+            font-weight: 600;
+            font-size: 0.95rem;
             margin-bottom: 2px;
             color: var(--text);
         }
-        
+
         .link-subtitle {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-light);
         }
         
@@ -258,28 +259,62 @@
             background: linear-gradient(135deg, var(--primary), {{ $primaryColor }}dd);
             color: white;
             border: none;
-            padding: 22px;
+            padding: 20px 22px;
+            border-radius: 50px;
+            position: relative;
+            min-height: 85px;
         }
-        
+
         .link-card.menu-link .link-icon {
-            background: rgba(255,255,255,0.25);
+            width: 55px;
+            height: 55px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .link-card.menu-link .link-title,
+
+        .link-card.menu-link .link-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .link-card.menu-link .link-title {
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
         .link-card.menu-link .link-subtitle {
             color: white;
-        }
-        
-        .link-card.menu-link .link-subtitle {
             opacity: 0.85;
+            font-size: 0.8rem;
         }
-        
+
         .link-card.menu-link .link-arrow {
-            color: rgba(255,255,255,0.7);
+            width: 34px;
+            height: 34px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 0.85rem;
         }
-        
+
         .link-card.menu-link:hover .link-arrow {
-            color: white;
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        [dir="rtl"] .link-card.menu-link .link-arrow {
+            transform: rotate(180deg);
+        }
+
+        [dir="rtl"] .link-card.menu-link:hover .link-arrow {
+            transform: rotate(180deg) scale(1.1);
         }
         
         /* Social Links */
@@ -311,30 +346,39 @@
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 12px;
+            gap: 15px;
             flex-wrap: wrap;
         }
-        
+
         .social-link {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
             background: var(--card-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary);
-            font-size: 1.3rem;
+            color: var(--text);
+            font-size: 1.4rem;
             text-decoration: none;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.8);
+            border: 2px solid var(--primary);
         }
 
         .social-link:hover {
-            transform: translateY(-4px) scale(1.1);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
+
+        .social-link.facebook:hover { background: #1877F2; color: white; border-color: #1877F2; }
+        .social-link.instagram:hover { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border-color: transparent; }
+        .social-link.twitter:hover, .social-link.x:hover { background: #000000; color: white; border-color: #000000; }
+        .social-link.tiktok:hover { background: #000000; color: white; border-color: #000000; }
+        .social-link.youtube:hover { background: #FF0000; color: white; border-color: #FF0000; }
+        .social-link.snapchat:hover { background: #FFFC00; color: #000; border-color: #FFFC00; }
+        .social-link.linkedin:hover { background: #0A66C2; color: white; border-color: #0A66C2; }
+        .social-link.telegram:hover { background: #0088cc; color: white; border-color: #0088cc; }
         
         /* Working Hours */
         .hours-section {
@@ -371,14 +415,27 @@
         /* Footer */
         .footer {
             text-align: center;
-            padding: 20px;
-            color: var(--text-light);
-            font-size: 0.8rem;
+            padding: 25px 20px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
         }
-        
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .footer-icon {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
         .footer a {
             color: var(--primary);
             text-decoration: none;
+            font-weight: 600;
         }
         
         /* Language Switcher */
@@ -495,68 +552,79 @@
         
         {{-- Links Section --}}
         <div class="links-section">
-            {{-- Menu Link --}}
-            <a href="{{ route('menu.show', $restaurant->slug) }}" class="link-card menu-link">
-                <div class="link-icon menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
-                        <path d="M12 1c-.5 0-1 .4-1 1v1.07C6.4 3.55 3 7.36 3 12h18c0-4.64-3.4-8.45-8-8.93V2c0-.6-.5-1-1-1zM2 14v2h1v4c0 .6.4 1 1 1h16c.6 0 1-.4 1-1v-4h1v-2H2zm4 2h12v3H6v-3z"/>
-                    </svg>
-                </div>
-                <div class="link-content">
-                    <div class="link-title">{{ $locale === 'ar' ? 'قائمة الطعام' : 'Food Menu' }}</div>
-                    <div class="link-subtitle">
-                        @if($restaurant->menu_type === 'pdf')
-                            {{ $locale === 'ar' ? 'عرض قائمة الطعام' : 'View our menu' }}
-                        @else
-                            {{ $locale === 'ar' ? 'تصفح أصنافنا المميزة' : 'Browse our delicious items' }}
-                        @endif
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-            </a>
-            
-            {{-- Location --}}
-            @if($restaurant->google_maps_url)
-            <a href="{{ $restaurant->google_maps_url }}" target="_blank" class="link-card">
-                <div class="link-icon location">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div class="link-content">
-                    <div class="link-title">{{ $locale === 'ar' ? 'موقعنا' : 'Our Location' }}</div>
-                    <div class="link-subtitle">{{ $restaurant->getAddress($locale) ?: ($locale === 'ar' ? 'افتح في خرائط جوجل' : 'Open in Google Maps') }}</div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-            </a>
-            @endif
+            @foreach($landingButtons as $button)
+                @php
+                    $showButton = false;
+                    $buttonUrl = '#';
+                    $buttonTarget = '';
+                    $isMenuButton = false;
 
-            {{-- Phone --}}
-            @if($restaurant->phone)
-            <a href="tel:{{ $restaurant->phone }}" class="link-card">
-                <div class="link-icon phone">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="link-content">
-                    <div class="link-title">{{ $locale === 'ar' ? 'اتصل بنا' : 'Call Us' }}</div>
-                    <div class="link-subtitle" style="direction: ltr; text-align: {{ $locale === 'ar' ? 'right' : 'left' }};">{{ $restaurant->phone }}</div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-            </a>
-            @endif
-            
-            
-            {{-- Google Reviews --}}
-            @if($restaurant->google_reviews_url)
-            <a href="{{ $restaurant->google_reviews_url }}" target="_blank" class="link-card">
-                <div class="link-icon review">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="link-content">
-                    <div class="link-title">{{ $locale === 'ar' ? 'قيّمنا على جوجل' : 'Rate us on Google' }}</div>
-                    <div class="link-subtitle">{{ $locale === 'ar' ? 'شاركنا رأيك' : 'Share your feedback' }}</div>
-                </div>
-                <i class="fas fa-chevron-right link-arrow"></i>
-            </a>
-            @endif
+                    switch($button->type) {
+                        case 'menu':
+                            $showButton = true;
+                            $buttonUrl = route('menu.show', $restaurant->slug);
+                            $isMenuButton = true;
+                            break;
+                        case 'branches':
+                            $showButton = $restaurant->isMain() && $restaurant->branches->count() > 0;
+                            $buttonUrl = route('menu.branches', $restaurant->slug);
+                            break;
+                        case 'phone':
+                            $showButton = !empty($restaurant->phone);
+                            $buttonUrl = 'tel:' . $restaurant->phone;
+                            break;
+                        case 'location':
+                            $showButton = !empty($restaurant->google_maps_url);
+                            $buttonUrl = $restaurant->google_maps_url;
+                            $buttonTarget = '_blank';
+                            break;
+                        case 'reviews':
+                            $showButton = !empty($restaurant->google_reviews_url);
+                            $buttonUrl = $restaurant->google_reviews_url;
+                            $buttonTarget = '_blank';
+                            break;
+                    }
+                @endphp
+
+                @if($showButton)
+                    @if($isMenuButton)
+                    <a href="{{ $buttonUrl }}" class="link-card menu-link" {{ $buttonTarget ? "target=$buttonTarget" : '' }}>
+                        <div class="link-icon menu">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor">
+                                <path d="M32 8c-1.1 0-2 .9-2 2v4.1C17.2 15.5 7 26.5 7 40h50c0-13.5-10.2-24.5-23-25.9V10c0-1.1-.9-2-2-2z"/>
+                                <ellipse cx="32" cy="40" rx="3" ry="2"/>
+                                <path d="M32 32c-1.7 0-3 1.3-3 3v2c0 .6.4 1 1 1h4c.6 0 1-.4 1-1v-2c0-1.7-1.3-3-3-3z"/>
+                                <path d="M5 44c0 2.2 1.8 4 4 4h46c2.2 0 4-1.8 4-4v-2H5v2z"/>
+                            </svg>
+                        </div>
+                        <div class="link-content">
+                            <div class="link-title">{{ $button->getTitle($locale) }}</div>
+                            <div class="link-subtitle">{{ $button->getSubtitle($locale) }}</div>
+                        </div>
+                        <div class="link-arrow">
+                            <i class="fas fa-chevron-{{ $locale === 'ar' ? 'left' : 'right' }}"></i>
+                        </div>
+                    </a>
+                    @else
+                    <a href="{{ $buttonUrl }}" class="link-card" {{ $buttonTarget ? "target=$buttonTarget" : '' }}>
+                        <div class="link-icon {{ $button->type }}">
+                            <i class="fas fa-{{ $button->icon ?? 'link' }}"></i>
+                        </div>
+                        <div class="link-content">
+                            <div class="link-title">{{ $button->getTitle($locale) }}</div>
+                            <div class="link-subtitle">
+                                @if($button->type === 'phone')
+                                    <span style="direction: ltr; display: inline-block;">{{ $restaurant->phone }}</span>
+                                @else
+                                    {{ $button->getSubtitle($locale) ?: ($button->type === 'location' ? $restaurant->getAddress($locale) : '') }}
+                                @endif
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right link-arrow"></i>
+                    </a>
+                    @endif
+                @endif
+            @endforeach
         </div>
         
         {{-- Social Links --}}
@@ -567,7 +635,6 @@
                 @foreach($restaurant->socialLinks as $social)
                     @php
                         $platform = strtolower($social->platform);
-                        // Skip WhatsApp from social links
                         if($platform === 'whatsapp') continue;
                         $iconClass = match($platform) {
                             'facebook' => 'fab fa-facebook-f',
@@ -601,7 +668,7 @@
             </div>
         </div>
         @endif
-        
-        </div>
+
+    </div>
 </body>
 </html>
