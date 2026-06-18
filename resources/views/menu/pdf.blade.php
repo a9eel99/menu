@@ -568,40 +568,85 @@
             }
         }
 
-        // Render all pages
+        // Render visible pages only (lazy loading)
         async function renderAllPages() {
             viewport.innerHTML = '';
             pageCanvases = [];
 
+            // Create placeholders for all pages first
             for (let i = 1; i <= totalPages; i++) {
-                const page = await pdfDoc.getPage(i);
-                const pdfViewport = page.getViewport({ scale: scale });
-
                 const pageDiv = document.createElement('div');
                 pageDiv.className = 'pdf-page';
                 pageDiv.id = 'page-' + i;
+                pageDiv.dataset.pageNum = i;
+                pageDiv.dataset.rendered = 'false';
 
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
+                // Set placeholder size based on first page
+                const page = await pdfDoc.getPage(1);
+                const pdfViewport = page.getViewport({ scale: scale });
+                pageDiv.style.width = Math.floor(pdfViewport.width) + 'px';
+                pageDiv.style.height = Math.floor(pdfViewport.height) + 'px';
+                pageDiv.style.background = '#f0f0f0';
 
-                // High DPI support
-                const outputScale = window.devicePixelRatio || 1;
-                canvas.width = Math.floor(pdfViewport.width * outputScale);
-                canvas.height = Math.floor(pdfViewport.height * outputScale);
-                canvas.style.width = Math.floor(pdfViewport.width) + 'px';
-                canvas.style.height = Math.floor(pdfViewport.height) + 'px';
-
-                context.scale(outputScale, outputScale);
-
-                pageDiv.appendChild(canvas);
                 viewport.appendChild(pageDiv);
-                pageCanvases.push({ canvas, page, pageNum: i });
-
-                await page.render({
-                    canvasContext: context,
-                    viewport: pdfViewport
-                }).promise;
             }
+
+            // Render first 2 pages immediately
+            await renderPage(1);
+            if (totalPages > 1) await renderPage(2);
+
+            // Setup intersection observer for lazy loading
+            setupLazyLoading();
+        }
+
+        // Render single page
+        async function renderPage(pageNum) {
+            const pageDiv = document.getElementById('page-' + pageNum);
+            if (!pageDiv || pageDiv.dataset.rendered === 'true') return;
+
+            const page = await pdfDoc.getPage(pageNum);
+            const pdfViewport = page.getViewport({ scale: scale });
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            // Use lower DPI on mobile for speed
+            const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = Math.floor(pdfViewport.width * outputScale);
+            canvas.height = Math.floor(pdfViewport.height * outputScale);
+            canvas.style.width = Math.floor(pdfViewport.width) + 'px';
+            canvas.style.height = Math.floor(pdfViewport.height) + 'px';
+
+            context.scale(outputScale, outputScale);
+
+            pageDiv.innerHTML = '';
+            pageDiv.style.background = 'white';
+            pageDiv.appendChild(canvas);
+            pageDiv.dataset.rendered = 'true';
+            pageCanvases.push({ canvas, page, pageNum });
+
+            await page.render({
+                canvasContext: context,
+                viewport: pdfViewport
+            }).promise;
+        }
+
+        // Lazy loading with Intersection Observer
+        function setupLazyLoading() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const pageNum = parseInt(entry.target.dataset.pageNum);
+                        renderPage(pageNum);
+                        // Pre-render next page
+                        if (pageNum < totalPages) renderPage(pageNum + 1);
+                    }
+                });
+            }, { rootMargin: '200px' });
+
+            document.querySelectorAll('.pdf-page').forEach(page => {
+                observer.observe(page);
+            });
         }
 
         // Re-render at new scale

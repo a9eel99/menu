@@ -9,6 +9,7 @@ use App\Models\MenuItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class RestaurantController extends Controller
 {
@@ -95,13 +96,13 @@ $restaurants = Restaurant::whereNull('parent_id')
         $validated['is_active'] = $request->has('is_active');
         $validated['menu_type'] = $request->input('menu_type', 'digital');
 
-        // رفع الصور
+        // رفع الصور مع الضغط
         if ($request->hasFile('logo')) {
-            $validated['logo'] = $request->file('logo')->store('restaurants/logos', 'public');
+            $validated['logo'] = $this->uploadAndCompressImage($request->file('logo'), 'restaurants/logos', 500, 500, 85);
         }
 
         if ($request->hasFile('cover_image')) {
-            $validated['cover_image'] = $request->file('cover_image')->store('restaurants/covers', 'public');
+            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 1200, 600, 80);
         }
 
         // رفع ملف PDF
@@ -205,19 +206,19 @@ $restaurants = Restaurant::whereNull('parent_id')
 
         $validated['is_active'] = $request->has('is_active');
 
-        // رفع الصور
+        // رفع الصور مع الضغط
         if ($request->hasFile('logo')) {
             if ($restaurant->logo) {
                 Storage::disk('public')->delete($restaurant->logo);
             }
-            $validated['logo'] = $request->file('logo')->store('restaurants/logos', 'public');
+            $validated['logo'] = $this->uploadAndCompressImage($request->file('logo'), 'restaurants/logos', 500, 500, 85);
         }
 
         if ($request->hasFile('cover_image')) {
             if ($restaurant->cover_image) {
                 Storage::disk('public')->delete($restaurant->cover_image);
             }
-            $validated['cover_image'] = $request->file('cover_image')->store('restaurants/covers', 'public');
+            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 1200, 600, 80);
         }
 
         // حذف الصور إذا طلب
@@ -538,5 +539,30 @@ $restaurants = Restaurant::whereNull('parent_id')
     {
         // الكل عنده صلاحية - بس الموظف ما يقدر يضيف مطعم جديد
         return;
+    }
+
+    /**
+     * رفع وضغط الصور
+     */
+    private function uploadAndCompressImage($file, $path, $maxWidth, $maxHeight, $quality = 80)
+    {
+        $filename = uniqid() . '.jpg';
+        $fullPath = $path . '/' . $filename;
+
+        $image = Image::make($file);
+
+        // تصغير الأبعاد إذا كانت أكبر من المطلوب
+        if ($image->width() > $maxWidth || $image->height() > $maxHeight) {
+            $image->fit($maxWidth, $maxHeight, function ($constraint) {
+                $constraint->upsize();
+            });
+        }
+
+        // حفظ بصيغة JPEG مضغوطة
+        $image->encode('jpg', $quality);
+
+        Storage::disk('public')->put($fullPath, $image->stream());
+
+        return $fullPath;
     }
 }
