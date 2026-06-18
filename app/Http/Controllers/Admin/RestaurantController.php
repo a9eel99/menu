@@ -551,12 +551,11 @@ $restaurants = Restaurant::whereNull('parent_id')
 
         $image = Image::make($file);
 
-        // تصغير الأبعاد إذا كانت أكبر من المطلوب
-        if ($image->width() > $maxWidth || $image->height() > $maxHeight) {
-            $image->fit($maxWidth, $maxHeight, function ($constraint) {
-                $constraint->upsize();
-            });
-        }
+        // تصغير الأبعاد مع الحفاظ على النسبة (بدون قص)
+        $image->resize($maxWidth, $maxHeight, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
 
         // حفظ بصيغة JPEG مضغوطة
         $image->encode('jpg', $quality);
