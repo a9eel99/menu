@@ -128,35 +128,7 @@
             to { transform: rotate(360deg); }
         }
 
-        .bottom-bar {
-            background: #12121a;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            border-radius: 12px;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .btn-primary {
-            background: {{ $restaurant->primary_color ?? '#FF6B35' }};
-        }
-
-        .btn-secondary {
-            background: #25D366;
-        }
-    </style>
+            </style>
 </head>
 <body>
     <div class="container">
@@ -173,9 +145,9 @@
                     <div class="brand-subtitle">قائمة الطعام</div>
                 </div>
             </div>
-            <a href="{{ $restaurant->getMenuPdfUrl() }}" download class="action-btn">
-                <i class="fas fa-download"></i>
-            </a>
+            <button onclick="shareMenu()" class="action-btn">
+                <i class="fas fa-share-alt"></i>
+            </button>
         </header>
 
         <div class="pdf-viewer" id="viewer">
@@ -185,17 +157,7 @@
             </div>
         </div>
 
-        <div class="bottom-bar">
-            <a href="{{ $restaurant->getMenuPdfUrl() }}" download class="btn btn-primary">
-                <i class="fas fa-download"></i>
-                تحميل
-            </a>
-            <a href="https://wa.me/?text={{ urlencode($restaurant->name_ar . ': ' . route('menu.show', $restaurant->slug)) }}" target="_blank" class="btn btn-secondary">
-                <i class="fab fa-whatsapp"></i>
-                مشاركة
-            </a>
-        </div>
-    </div>
+            </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
@@ -241,6 +203,18 @@
         }
 
         loadPDF();
+
+        function shareMenu() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '{{ $restaurant->name_ar }} - قائمة الطعام',
+                    url: '{{ route('menu.show', $restaurant->slug) }}'
+                });
+            } else {
+                navigator.clipboard.writeText('{{ route('menu.show', $restaurant->slug) }}');
+                alert('تم نسخ الرابط');
+            }
+        }
     </script>
 </body>
 </html>
