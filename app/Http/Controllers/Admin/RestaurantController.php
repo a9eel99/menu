@@ -59,10 +59,11 @@ $restaurants = Restaurant::whereNull('parent_id')
             return redirect()->route('admin.restaurants.index')
                 ->with('error', 'ليس لديك صلاحية إضافة مطعم جديد');
         }
-        
+
         $validated = $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:restaurants,slug|regex:/^[a-z0-9-]+$/',
             'parent_id' => 'nullable|exists:restaurants,id',
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
@@ -84,6 +85,11 @@ $restaurants = Restaurant::whereNull('parent_id')
             'menu_type' => 'nullable|in:digital,pdf',
             'menu_pdf' => 'nullable|file|mimes:pdf|max:30720',
         ]);
+
+        // إزالة slug إذا كان فاضي عشان الموديل يولده تلقائي
+        if (empty($validated['slug'])) {
+            unset($validated['slug']);
+        }
 
         $validated['user_id'] = Auth::id();
         $validated['is_active'] = $request->has('is_active');
@@ -159,6 +165,7 @@ $restaurants = Restaurant::whereNull('parent_id')
         $validated = $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:restaurants,slug,' . $restaurant->id . '|regex:/^[a-z0-9-]+$/',
             'parent_id' => 'nullable|exists:restaurants,id',
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
@@ -180,6 +187,11 @@ $restaurants = Restaurant::whereNull('parent_id')
             'menu_type' => 'nullable|in:digital,pdf',
             'menu_pdf' => 'nullable|file|mimes:pdf|max:30720',
         ]);
+
+        // إزالة slug إذا كان فاضي عشان يبقى الحالي
+        if (empty($validated['slug'])) {
+            unset($validated['slug']);
+        }
 
         // التحقق من أن الأب تابع للمستخدم ومش نفس المطعم
         if (!empty($validated['parent_id'])) {

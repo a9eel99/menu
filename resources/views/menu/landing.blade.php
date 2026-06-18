@@ -354,31 +354,24 @@
             width: 56px;
             height: 56px;
             border-radius: 14px;
-            background: var(--card-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text);
+            color: white;
             font-size: 1.4rem;
             text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 2px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border: none;
         }
 
-        .social-link:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-
-        .social-link.facebook:hover { background: #1877F2; color: white; border-color: #1877F2; }
-        .social-link.instagram:hover { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border-color: transparent; }
-        .social-link.twitter:hover, .social-link.x:hover { background: #000000; color: white; border-color: #000000; }
-        .social-link.tiktok:hover { background: #000000; color: white; border-color: #000000; }
-        .social-link.youtube:hover { background: #FF0000; color: white; border-color: #FF0000; }
-        .social-link.snapchat:hover { background: #FFFC00; color: #000; border-color: #FFFC00; }
-        .social-link.linkedin:hover { background: #0A66C2; color: white; border-color: #0A66C2; }
-        .social-link.telegram:hover { background: #0088cc; color: white; border-color: #0088cc; }
+        .social-link.facebook { background: #1877F2; }
+        .social-link.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .social-link.twitter, .social-link.x { background: #000000; }
+        .social-link.tiktok { background: #000000; }
+        .social-link.youtube { background: #FF0000; }
+        .social-link.snapchat { background: #FFFC00; color: #000; }
+        .social-link.linkedin { background: #0A66C2; }
+        .social-link.telegram { background: #0088cc; }
         
         /* Working Hours */
         .hours-section {

@@ -212,6 +212,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const menuUrl = '{{ route('menu.landing', $restaurant->slug) }}';
+const restaurantName = @json($restaurant->getName());
 const qrSize = 250;
 const qrColor = '#000000';
 
@@ -288,7 +289,7 @@ function downloadQR(format) {
         URL.revokeObjectURL(url);
         showToast('{{ __("app.file_downloaded") }}');
     } else if (format === 'pdf') {
-        // Create PDF using jsPDF
+        // Create PDF with QR code only
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({
             orientation: 'portrait',
@@ -299,27 +300,12 @@ function downloadQR(format) {
         const imgData = canvas.toDataURL('image/png');
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-        const qrSizeMM = 80;
+        const qrSizeMM = 100;
         const x = (pageWidth - qrSizeMM) / 2;
-        const y = 40;
+        const y = (pageHeight - qrSizeMM) / 2;
 
-        // Add title
-        pdf.setFontSize(20);
-        pdf.setTextColor(0, 0, 0);
-        pdf.text('{{ $restaurant->getName() }}', pageWidth / 2, 25, { align: 'center' });
-
-        // Add QR code
+        // Add QR code centered
         pdf.addImage(imgData, 'PNG', x, y, qrSizeMM, qrSizeMM);
-
-        // Add URL
-        pdf.setFontSize(10);
-        pdf.setTextColor(100, 100, 100);
-        pdf.text(menuUrl, pageWidth / 2, y + qrSizeMM + 10, { align: 'center' });
-
-        // Add scan text
-        pdf.setFontSize(14);
-        pdf.setTextColor(0, 0, 0);
-        pdf.text('{{ __("app.scan_qr") }}', pageWidth / 2, y + qrSizeMM + 20, { align: 'center' });
 
         pdf.save('{{ $restaurant->slug }}-qr.pdf');
         showToast('{{ __("app.file_downloaded") }}');

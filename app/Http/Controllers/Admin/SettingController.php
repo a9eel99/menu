@@ -51,8 +51,8 @@ class SettingController extends Controller
         $request->validate([
             'site_logo' => 'nullable|image|mimes:png,jpg,jpeg,svg,webp|max:2048',
             'site_favicon' => 'nullable|image|mimes:png,ico,jpg,jpeg|max:512',
-            'primary_color' => 'required|string|max:7',
-            'secondary_color' => 'required|string|max:7',
+            'primary_color' => 'nullable|string|max:7',
+            'secondary_color' => 'nullable|string|max:7',
         ]);
 
         // رفع الشعار
@@ -96,8 +96,12 @@ class SettingController extends Controller
             Setting::set('site_favicon', null);
         }
 
-        Setting::set('primary_color', $request->primary_color);
-        Setting::set('secondary_color', $request->secondary_color);
+        if ($request->filled('primary_color')) {
+            Setting::set('primary_color', $request->primary_color);
+        }
+        if ($request->filled('secondary_color')) {
+            Setting::set('secondary_color', $request->secondary_color);
+        }
         
         // مسح الكاش
         Setting::clearCache();

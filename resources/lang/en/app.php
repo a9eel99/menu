@@ -556,4 +556,8 @@ return [
     'no_background' => 'No Background',
     'rounded_background' => 'Rounded Background',
     'logo_size_warning' => 'Logo is too large! QR may be hard to scan. Recommended: 18% or less.',
+
+    // Link/Slug
+    'link' => 'Link',
+    'slug_hint' => 'Leave empty to auto-generate',
 ];

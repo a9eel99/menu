@@ -582,4 +582,8 @@ return [
     'no_background' => 'بدون خلفية',
     'rounded_background' => 'خلفية دائرية',
     'logo_size_warning' => 'حجم الشعار كبير! قد يصعب مسح الـ QR. يُنصح بـ 18% أو أقل.',
+
+    // Link/Slug
+    'link' => 'الرابط',
+    'slug_hint' => 'اتركه فارغاً للتوليد التلقائي',
 ];

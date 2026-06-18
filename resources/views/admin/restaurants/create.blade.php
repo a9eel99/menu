@@ -312,15 +312,20 @@
             </div>
             <div class="form-card-body">
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-5 mb-3">
                         <label class="form-label">{{ __('app.restaurant_name_ar') }} <span class="required">*</span></label>
                         <input type="text" name="name_ar" class="form-control @error('name_ar') is-invalid @enderror" value="{{ old('name_ar') }}" placeholder="{{ __('app.enter_name_ar') }}" required>
                         @error('name_ar')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label class="form-label">{{ __('app.restaurant_name_en') }} <span class="required">*</span></label>
                         <input type="text" name="name_en" class="form-control @error('name_en') is-invalid @enderror" value="{{ old('name_en') }}" placeholder="{{ __('app.enter_name_en') }}" required>
                         @error('name_en')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">{{ __('app.link') }} <small class="text-muted">({{ __('app.optional') }})</small></label>
+                        <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" value="{{ old('slug') }}" placeholder="aseer-time-riyadh" style="direction: ltr;">
+                        @error('slug')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
                 

@@ -137,7 +137,14 @@
             </div>
             
             <div class="nav-section">{{ __('app.restaurants') }}</div>
-            
+
+            <div class="nav-item">
+                <a href="{{ route('admin.restaurants.index') }}" class="nav-link {{ request()->routeIs('admin.restaurants.index') ? 'active' : '' }}">
+                    <i class="fas fa-list"></i>
+                    <span>{{ __('app.restaurants_and_branches') }}</span>
+                </a>
+            </div>
+
             @forelse($userRestaurants as $restaurant)
                 <div class="restaurant-group">
                     <a href="{{ route('admin.restaurants.show', $restaurant) }}" 
