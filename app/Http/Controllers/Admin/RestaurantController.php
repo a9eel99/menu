@@ -102,7 +102,7 @@ $restaurants = Restaurant::whereNull('parent_id')
         }
 
         if ($request->hasFile('cover_image')) {
-            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 1200, 600, 80);
+            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 1200, 600, 100);
         }
 
         // رفع ملف PDF
@@ -218,7 +218,7 @@ $restaurants = Restaurant::whereNull('parent_id')
             if ($restaurant->cover_image) {
                 Storage::disk('public')->delete($restaurant->cover_image);
             }
-            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 1200, 600, 80);
+            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 1200, 600, 100);
         }
 
         // حذف الصور إذا طلب
