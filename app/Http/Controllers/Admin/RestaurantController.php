@@ -102,7 +102,7 @@ $restaurants = Restaurant::whereNull('parent_id')
         }
 
         if ($request->hasFile('cover_image')) {
-            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 1200, 600, 100);
+            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 2000, 2000, 100, false);
         }
 
         // رفع ملف PDF
@@ -218,7 +218,7 @@ $restaurants = Restaurant::whereNull('parent_id')
             if ($restaurant->cover_image) {
                 Storage::disk('public')->delete($restaurant->cover_image);
             }
-            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 1200, 600, 100);
+            $validated['cover_image'] = $this->uploadAndCompressImage($request->file('cover_image'), 'restaurants/covers', 2000, 2000, 100, false);
         }
 
         // حذف الصور إذا طلب
@@ -544,21 +544,24 @@ $restaurants = Restaurant::whereNull('parent_id')
     /**
      * رفع وضغط الصور
      */
-    private function uploadAndCompressImage($file, $path, $maxWidth, $maxHeight, $quality = 80)
+    private function uploadAndCompressImage($file, $path, $maxWidth, $maxHeight, $quality = 80, $resize = true)
     {
-        $filename = uniqid() . '.jpg';
+        $extension = $file->getClientOriginalExtension() ?: 'jpg';
+        $filename = uniqid() . '.' . $extension;
         $fullPath = $path . '/' . $filename;
 
         $image = Image::make($file);
 
-        // تصغير الأبعاد مع الحفاظ على النسبة (بدون قص)
-        $image->resize($maxWidth, $maxHeight, function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        });
+        // تصغير الأبعاد فقط إذا مطلوب
+        if ($resize && ($image->width() > $maxWidth || $image->height() > $maxHeight)) {
+            $image->resize($maxWidth, $maxHeight, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+        }
 
-        // حفظ بصيغة JPEG مضغوطة
-        $image->encode('jpg', $quality);
+        // حفظ بنفس الصيغة
+        $image->encode($extension, $quality);
 
         Storage::disk('public')->put($fullPath, $image->stream());
 
