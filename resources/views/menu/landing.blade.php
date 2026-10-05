@@ -573,7 +573,10 @@
                     switch($button->type) {
                         case 'menu':
                             $showButton = true;
-                            $buttonUrl = route('menu.show', $restaurant->slug);
+                            // رابط مباشر لنوع المنيو بدل /menu اللي بيعمل تحويل (طلب زيادة على السيرفر)
+                            $buttonUrl = $restaurant->isPdfMenu()
+                                ? route('menu.pdf', $restaurant->slug)
+                                : route('menu.digital', $restaurant->slug);
                             $isMenuButton = true;
                             break;
                         case 'branches':
