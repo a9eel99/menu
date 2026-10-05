@@ -15,6 +15,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+
+    @if($restaurant->isPdfMenu())
+    {{-- معظم الزباين بيفتحوا المنيو: نجهّز مكتبة عرض الـ PDF بالخلفية بعد ما الصفحة تخلص --}}
+    <link rel="prefetch" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
+    <link rel="prefetch" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js">
+    @endif
     
     @php
         $primaryColor = $restaurant->primary_color ?? '#8B5CF6';
