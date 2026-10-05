@@ -496,6 +496,7 @@
                             <span id="selectedFileName"></span>
                         </div>
                     </div>
+                    @include('admin.restaurants.partials.menu-pages-converter')
                 </div>
             </div>
         </div>
@@ -649,7 +650,7 @@ if (pdfZone && pdfInput) {
         const files = e.dataTransfer.files;
         if (files.length && files[0].type === 'application/pdf') {
             pdfInput.files = files;
-            showSelectedFile(files[0].name);
+            pdfInput.dispatchEvent(new Event('change'));
         }
     });
 

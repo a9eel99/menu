@@ -38,11 +38,13 @@ class Restaurant extends Model
         'is_active',
         'menu_type',
         'menu_pdf',
+        'menu_pages',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'show_linked_selector' => 'boolean',
+        'menu_pages' => 'array',
     ];
 
     protected $attributes = [
@@ -304,5 +306,22 @@ class Restaurant extends Model
     public function isPdfMenu()
     {
         return $this->menu_type === 'pdf' && $this->menu_pdf;
+    }
+
+    /**
+     * صفحات منيو الـ PDF كصور جاهزة للعرض: [['url', 'width', 'height'], ...]
+     */
+    public function getMenuPageImages(): array
+    {
+        return array_map(fn ($page) => [
+            'url' => asset('storage/' . $page['path']),
+            'width' => $page['width'],
+            'height' => $page['height'],
+        ], $this->menu_pages ?? []);
+    }
+
+    public function hasMenuPageImages(): bool
+    {
+        return !empty($this->menu_pages);
     }
 }
