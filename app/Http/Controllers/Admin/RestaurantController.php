@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
 use App\Models\Category;
 use App\Models\MenuItem;
+use App\Support\MenuPages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -112,9 +113,19 @@ $restaurants = Restaurant::whereNull('parent_id')
 
         $restaurant = Restaurant::create($validated);
 
+        // صفحات المنيو كصور (المتصفح حوّلها من الـ PDF وقت الرفع)
+        $pagesWarning = null;
+        if ($restaurant->menu_pdf) {
+            [$pages, $pagesWarning] = $this->storeMenuPagesFromRequest($request, $restaurant);
+            if ($pages) {
+                $restaurant->update(['menu_pages' => $pages]);
+            }
+        }
+
         $type = $restaurant->isBranch() ? 'الفرع' : 'المطعم';
         return redirect()->route('admin.restaurants.show', $restaurant)
-            ->with('success', "تم إنشاء {$type} بنجاح");
+            ->with('success', "تم إنشاء {$type} بنجاح")
+            ->with('warning', $pagesWarning);
     }
 
     /**
@@ -232,18 +243,25 @@ $restaurants = Restaurant::whereNull('parent_id')
             $validated['cover_image'] = null;
         }
 
-        // رفع ملف PDF
+        // رفع ملف PDF (صور الصفحات القديمة بتنحذف، والجديدة بتنحفظ إذا المتصفح حوّلها)
+        $pagesWarning = null;
         if ($request->hasFile('menu_pdf')) {
+            [$newPages, $pagesWarning] = $this->storeMenuPagesFromRequest($request, $restaurant);
             if ($restaurant->menu_pdf) {
                 Storage::disk('public')->delete($restaurant->menu_pdf);
             }
             $validated['menu_pdf'] = $request->file('menu_pdf')->store('restaurants/menus', 'public');
+            MenuPages::delete($restaurant->menu_pages);
+            $validated['menu_pages'] = $newPages;
         }
 
         // حذف PDF إذا طلب
         if ($request->has('remove_pdf') && $restaurant->menu_pdf) {
             Storage::disk('public')->delete($restaurant->menu_pdf);
+            MenuPages::delete($restaurant->menu_pages);
+            MenuPages::delete($validated['menu_pages'] ?? null);
             $validated['menu_pdf'] = null;
+            $validated['menu_pages'] = null;
             $validated['menu_type'] = 'digital';
         }
 
@@ -255,7 +273,8 @@ $restaurants = Restaurant::whereNull('parent_id')
         $restaurant->update($validated);
 
         return redirect()->route('admin.restaurants.show', $restaurant)
-            ->with('success', 'تم تحديث البيانات بنجاح');
+            ->with('success', 'تم تحديث البيانات بنجاح')
+            ->with('warning', $pagesWarning);
     }
 
     /**
@@ -272,6 +291,7 @@ $restaurants = Restaurant::whereNull('parent_id')
         if ($restaurant->cover_image) {
             Storage::disk('public')->delete($restaurant->cover_image);
         }
+        MenuPages::delete($restaurant->menu_pages);
 
         $restaurant->delete();
 
@@ -319,6 +339,25 @@ $restaurants = Restaurant::whereNull('parent_id')
         }
 
         return response()->json(['success' => false, 'message' => 'Invalid request'], 400);
+    }
+
+    /**
+     * تحويل منيو الـ PDF الحالي لصور (المتصفح بيحوّل وبيبعث الصور)
+     */
+    public function storeMenuPages(Request $request, Restaurant $restaurant)
+    {
+        $this->checkOwnership($restaurant);
+
+        if (!$restaurant->menu_pdf) {
+            return response()->json(['message' => 'لا يوجد ملف PDF'], 422);
+        }
+        $request->validate(['menu_pages_data' => 'required|string']);
+
+        $pages = MenuPages::store($restaurant, $request->input('menu_pages_data'));
+        MenuPages::delete($restaurant->menu_pages);
+        $restaurant->update(['menu_pages' => $pages]);
+
+        return response()->json(['pages' => count($pages)]);
     }
 
     /**
@@ -530,6 +569,23 @@ $restaurants = Restaurant::whereNull('parent_id')
 
         return redirect()->route('admin.restaurants.show', $restaurant)
             ->with('success', $message);
+    }
+
+    /**
+     * يحفظ صور صفحات المنيو المرسلة مع الفورم. إذا ما وصلت أو فيها مشكلة،
+     * الحفظ بيكمل والمنيو بينعرض كـ PDF زي قبل، مع تنبيه.
+     */
+    private function storeMenuPagesFromRequest(Request $request, Restaurant $restaurant): array
+    {
+        if (!$request->filled('menu_pages_data')) {
+            return [null, null];
+        }
+
+        try {
+            return [MenuPages::store($restaurant, $request->input('menu_pages_data')), null];
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return [null, 'تم الحفظ، لكن تعذّر تحويل صفحات المنيو لصور، فالمنيو سيُعرض كملف PDF.'];
+        }
     }
 
     /**

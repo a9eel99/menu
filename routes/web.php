@@ -89,6 +89,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('/restaurants/{restaurant}/upload-image', [RestaurantController::class, 'uploadImage'])->name('restaurants.upload-image');
         Route::delete('/restaurants/{restaurant}/delete-image/{type}', [RestaurantController::class, 'deleteImage'])->name('restaurants.delete-image');
         Route::get('/restaurants/{restaurant}/qrcode', [RestaurantController::class, 'qrCode'])->name('restaurants.qrcode');
+        Route::post('/restaurants/{restaurant}/menu-pages', [RestaurantController::class, 'storeMenuPages'])->name('restaurants.menu-pages');
         Route::get('/restaurants/{restaurant}/copy', [RestaurantController::class, 'copyMenu'])->name('restaurants.copy');
         Route::post('/restaurants/{restaurant}/copy', [RestaurantController::class, 'doCopyMenu'])->name('restaurants.copy.do');
         
