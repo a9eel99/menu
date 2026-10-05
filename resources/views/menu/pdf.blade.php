@@ -10,17 +10,10 @@
     <link rel="icon" href="{{ asset('storage/' . $restaurant->logo) }}" type="image/png">
     @endif
 
-    {{-- نبلش ننزل ملف المنيو ومكتبة PDF.js فوراً وبالتوازي، بدل ما الملف يستنى المكتبة تخلص --}}
+    {{-- نبلش ننزل مكتبة PDF.js فوراً بدل ما تستنى آخر الصفحة --}}
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" as="script">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js" as="script">
-    <script>
-        window.menuPdfData = fetch(@json($restaurant->getMenuPdfUrl())).then(function (r) {
-            if (!r.ok) throw new Error('PDF ' + r.status);
-            return r.arrayBuffer();
-        });
-        window.menuPdfData.catch(function () {});
-    </script>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -113,15 +106,18 @@
         }
 
         .pdf-page {
+            width: 100%;
+            flex-shrink: 0;
             background: white;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             border-radius: 4px;
+            overflow: hidden;
         }
 
         .pdf-page canvas {
             display: block;
-            max-width: 100%;
-            height: auto !important;
+            width: 100%;
+            height: auto;
         }
 
         .loading {
@@ -178,42 +174,69 @@
         const pdfUrl = "{{ $restaurant->getMenuPdfUrl() }}";
         const viewer = document.getElementById('viewer');
 
+        // أقصى دقة للرسم: أكثر من هيك بياكل ذاكرة التلفون بدون فرق بيبيّن
+        const MAX_PIXEL_RATIO = 2;
+
         async function loadPDF() {
             try {
-                // الملف بلّش ينزل من الـ head، وإذا فشل نرجع للطريقة العادية
-                let source = pdfUrl;
-                try {
-                    source = { data: await window.menuPdfData };
-                } catch (e) {}
-                const pdf = await pdfjsLib.getDocument(source).promise;
+                // بدون autoFetch: المتصفح بينزل بس أجزاء الملف للصفحات اللي بتنعرض
+                const pdf = await pdfjsLib.getDocument({
+                    url: pdfUrl,
+                    disableAutoFetch: true,
+                    disableStream: true,
+                    rangeChunkSize: 65536,
+                }).promise;
+
+                const firstPage = await pdf.getPage(1);
+                const baseViewport = firstPage.getViewport({ scale: 1 });
+                const ratio = baseViewport.width / baseViewport.height;
+
+                // نحجز مكان لكل صفحة بنفس المقاس عشان السكرول يكون ثابت
                 viewer.innerHTML = '';
-
+                const slots = [];
                 for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-
-                    // حساب العرض المناسب
-                    const containerWidth = viewer.clientWidth - 32;
-                    const viewport = page.getViewport({ scale: 1 });
-                    const scale = containerWidth / viewport.width;
-                    const scaledViewport = page.getViewport({ scale: scale * 2 }); // جودة عالية
-
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.width = scaledViewport.width;
-                    canvas.height = scaledViewport.height;
-                    canvas.style.width = (scaledViewport.width / 2) + 'px';
-                    canvas.style.height = (scaledViewport.height / 2) + 'px';
-
-                    const pageDiv = document.createElement('div');
-                    pageDiv.className = 'pdf-page';
-                    pageDiv.appendChild(canvas);
-                    viewer.appendChild(pageDiv);
-
-                    await page.render({
-                        canvasContext: context,
-                        viewport: scaledViewport
-                    }).promise;
+                    const slot = document.createElement('div');
+                    slot.className = 'pdf-page';
+                    slot.style.aspectRatio = ratio;
+                    slot.dataset.page = i;
+                    viewer.appendChild(slot);
+                    slots.push(slot);
                 }
+
+                // نرسم صفحة وحدة بكل مرة، حسب الترتيب
+                const queued = new Set();
+                let chain = Promise.resolve();
+                const renderPage = (num) => {
+                    if (queued.has(num)) return;
+                    queued.add(num);
+                    chain = chain.then(async () => {
+                        const page = num === 1 ? firstPage : await pdf.getPage(num);
+                        const slot = slots[num - 1];
+                        const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
+                        const viewport = page.getViewport({ scale: (slot.clientWidth / page.getViewport({ scale: 1 }).width) * pixelRatio });
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.floor(viewport.width);
+                        canvas.height = Math.floor(viewport.height);
+                        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+
+                        slot.style.aspectRatio = '';
+                        slot.appendChild(canvas);
+                    }).catch(() => {});
+                };
+
+                renderPage(1);
+
+                // باقي الصفحات بتنرسم لما الزبون يقرب يوصلها بالسكرول
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            renderPage(Number(entry.target.dataset.page));
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { root: viewer, rootMargin: '100% 0px' });
+                slots.slice(1).forEach((slot) => observer.observe(slot));
             } catch (error) {
                 viewer.innerHTML = '<div class="loading"><i class="fas fa-exclamation-triangle" style="animation:none;color:#ef4444;"></i><div>حدث خطأ في تحميل الملف</div><a href="' + pdfUrl + '" target="_blank" class="btn btn-primary" style="margin-top:16px;display:inline-flex;"><i class="fas fa-external-link-alt"></i> فتح الملف</a></div>';
             }
