@@ -216,25 +216,25 @@
     
     <div class="container">
         <div class="header">
-            @if($restaurant->logo_url)
-                <img src="{{ $restaurant->logo_url }}" alt="{{ $restaurant->getName() }}" class="logo">
+            @if($restaurant->getLogoUrl())
+                <img src="{{ $restaurant->getLogoUrl() }}" alt="{{ $restaurant->getName($locale) }}" class="logo">
             @else
                 <div class="logo-placeholder">
                     <x-icon name="utensils" />
                 </div>
             @endif
             
-            <h1 class="restaurant-name">{{ $restaurant->getName() }}</h1>
+            <h1 class="restaurant-name">{{ $restaurant->getName($locale) }}</h1>
             <p class="select-text">
                 {{ $locale === 'ar' ? 'اختر الفرع' : 'Select a Branch' }}
             </p>
         </div>
         
         <div class="branches-list">
-            @foreach($restaurant->branches as $branch)
-                <a href="{{ route('menu.branch', [$restaurant->slug, $branch->slug]) }}" class="branch-card {{ $branch->is_main ? 'main' : '' }}">
+            @foreach($restaurant->activeBranches as $branch)
+                <a href="{{ route('menu.landing', $branch->slug) }}" class="branch-card {{ $branch->is_main ? 'main' : '' }}">
                     <div class="branch-header">
-                        <span class="branch-name">{{ $branch->getName() }}</span>
+                        <span class="branch-name">{{ $branch->getName($locale) }}</span>
                         @if($branch->is_main)
                             <span class="main-badge">
                                 {{ $locale === 'ar' ? 'الرئيسي' : 'Main' }}
@@ -243,10 +243,10 @@
                     </div>
                     
                     <div class="branch-info">
-                        @if($branch->getAddress())
+                        @if($branch->getAddress($locale))
                             <div class="branch-info-item">
                                 <x-icon name="map-marker-alt" />
-                                <span>{{ $branch->getAddress() }}</span>
+                                <span>{{ $branch->getAddress($locale) }}</span>
                             </div>
                         @endif
                         
@@ -257,10 +257,10 @@
                             </div>
                         @endif
                         
-                        @if($branch->getWorkingHours())
+                        @if($branch->getWorkingHours($locale))
                             <div class="branch-info-item">
                                 <x-icon name="clock" />
-                                <span>{{ $branch->getWorkingHours() }}</span>
+                                <span>{{ $branch->getWorkingHours($locale) }}</span>
                             </div>
                         @endif
                     </div>
