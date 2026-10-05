@@ -23,6 +23,7 @@ class MenuController extends Controller
                     $query->where('is_active', true)->orderBy('sort_order');
                 }
             ])
+            ->withExists('activeBranches')
             ->firstOrFail();
 
         // جلب اللغة الخاصة بهذا المطعم
@@ -32,15 +33,21 @@ class MenuController extends Controller
         app()->setLocale($locale);
 
         // التحقق من المطاعم المرتبطة وعرض صفحة الاختيار
+        // (ما بنسأل قاعدة البيانات إذا الزبون اختار المطعم أصلاً عن طريق ?direct)
         if ($restaurant->show_linked_selector &&
-            $restaurant->hasLinkedRestaurants() &&
+            $restaurant->linked_group_id &&
             !$request->has('direct')) {
             $linkedRestaurants = $restaurant->allLinkedRestaurants();
-            return view('menu.selector', compact('restaurant', 'locale', 'linkedRestaurants'));
+            // المطعم نفسه من ضمن القائمة، فلازم يكون في مطعم ثاني معه
+            if ($linkedRestaurants->count() > 1) {
+                return view('menu.selector', compact('restaurant', 'locale', 'linkedRestaurants'));
+            }
         }
 
-        // إنشاء الأزرار الافتراضية إذا لم تكن موجودة
-        $landingButtons = $restaurant->getOrCreateLandingButtons()->where('is_active', true);
+        // الأزرار الفعّالة محمّلة مع المطعم. إذا ما في ولا وحدة، بنرجع للطريقة اللي بتنشئ الأزرار الافتراضية
+        $landingButtons = $restaurant->landingButtons->isNotEmpty()
+            ? $restaurant->landingButtons
+            : $restaurant->getOrCreateLandingButtons()->where('is_active', true);
 
         return view('menu.landing', compact('restaurant', 'locale', 'landingButtons'));
     }

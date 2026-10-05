@@ -580,7 +580,7 @@
                             $isMenuButton = true;
                             break;
                         case 'branches':
-                            $showButton = $restaurant->isMain() && $restaurant->branches->count() > 0;
+                            $showButton = $restaurant->isMain() && $restaurant->active_branches_exists;
                             $buttonUrl = route('menu.branches', $restaurant->slug);
                             break;
                         case 'phone':
