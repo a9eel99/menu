@@ -61,6 +61,24 @@ class Restaurant extends Model
                 $restaurant->slug = static::generateUniqueSlug($restaurant->name_en ?: $restaurant->name_ar);
             }
         });
+
+        // حفظ الرابط القديم عند تغييره عشان الـ QR المطبوع يضل يحول للرابط الجديد
+        static::updated(function ($restaurant) {
+            if (!$restaurant->wasChanged('slug')) {
+                return;
+            }
+
+            $oldSlug = $restaurant->getOriginal('slug');
+            if ($oldSlug) {
+                RestaurantSlugRedirect::updateOrCreate(
+                    ['slug' => $oldSlug],
+                    ['restaurant_id' => $restaurant->id]
+                );
+            }
+
+            // إذا رجع المطعم لرابط قديم، ما بنحتاج تحويل له
+            RestaurantSlugRedirect::where('slug', $restaurant->slug)->delete();
+        });
     }
 
     public static function generateUniqueSlug($name)
@@ -73,7 +91,8 @@ class Restaurant extends Model
         $originalSlug = $slug;
         $counter = 1;
 
-        while (static::where('slug', $slug)->exists()) {
+        while (static::where('slug', $slug)->exists()
+            || RestaurantSlugRedirect::where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $counter;
             $counter++;
         }
@@ -91,6 +110,11 @@ class Restaurant extends Model
     public function parent()
     {
         return $this->belongsTo(Restaurant::class, 'parent_id');
+    }
+
+    public function slugRedirects()
+    {
+        return $this->hasMany(RestaurantSlugRedirect::class);
     }
 
     public function branches()

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Restaurant;
+use App\Models\RestaurantSlugRedirect;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -23,7 +25,7 @@ class MenuController extends Controller
                     $query->where('is_active', true)->orderBy('sort_order');
                 }
             ])
-            ->firstOrFail();
+            ->first() ?? $this->redirectOldSlug($slug);
 
         // جلب اللغة الخاصة بهذا المطعم
         $localeKey = 'locale_' . $restaurant->id;
@@ -52,7 +54,7 @@ class MenuController extends Controller
     {
         $restaurant = Restaurant::where('slug', $slug)
             ->where('is_active', true)
-            ->firstOrFail();
+            ->first() ?? $this->redirectOldSlug($slug);
 
         // إذا كان نوع المنيو PDF وموجود ملف
         if ($restaurant->menu_type === 'pdf' && $restaurant->menu_pdf) {
@@ -71,7 +73,7 @@ class MenuController extends Controller
         $restaurant = Restaurant::where('slug', $slug)
             ->where('is_active', true)
             ->with(['parent'])
-            ->firstOrFail();
+            ->first() ?? $this->redirectOldSlug($slug);
 
         // تأكد من أن النوع PDF وموجود ملف
         if ($restaurant->menu_type !== 'pdf' || !$restaurant->menu_pdf) {
@@ -94,7 +96,7 @@ class MenuController extends Controller
                 },
                 'parent'
             ])
-            ->firstOrFail();
+            ->first() ?? $this->redirectOldSlug($slug);
 
         // جلب اللغة الخاصة بهذا المطعم
         $localeKey = 'locale_' . $restaurant->id;
@@ -132,7 +134,7 @@ class MenuController extends Controller
         $restaurant = Restaurant::where('slug', $slug)
             ->where('is_active', true)
             ->with(['activeBranches'])
-            ->firstOrFail();
+            ->first() ?? $this->redirectOldSlug($slug);
 
         if (!$restaurant->isMain() || $restaurant->activeBranches->count() === 0) {
             return redirect()->route('menu.landing', $slug);
@@ -165,5 +167,29 @@ class MenuController extends Controller
         }
         
         return redirect()->back();
+    }
+
+    /**
+     * إذا الرابط قديم (المطعم غيّر رابطه) حوّل للرابط الجديد، وإلا 404
+     * عشان أي QR مطبوع بالرابط القديم يضل شغال
+     */
+    private function redirectOldSlug(string $slug): never
+    {
+        $redirect = RestaurantSlugRedirect::with('restaurant')->where('slug', $slug)->first();
+
+        if (!$redirect || !$redirect->restaurant) {
+            abort(404);
+        }
+
+        $request = request();
+        $segments = $request->segments();
+        $segments[0] = $redirect->restaurant->slug;
+
+        $url = url(implode('/', $segments));
+        if ($query = $request->getQueryString()) {
+            $url .= '?' . $query;
+        }
+
+        throw new HttpResponseException(redirect()->to($url, 302));
     }
 }

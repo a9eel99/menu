@@ -559,5 +559,6 @@ return [
 
     // Link/Slug
     'link' => 'Link',
+    'slug_change_hint' => 'You can change the link; printed QR codes keep working and redirect to the new link',
     'slug_hint' => 'Leave empty to auto-generate',
 ];

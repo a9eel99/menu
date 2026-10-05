@@ -9,6 +9,7 @@ use App\Models\MenuItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
 
 class RestaurantController extends Controller
@@ -64,7 +65,7 @@ $restaurants = Restaurant::whereNull('parent_id')
         $validated = $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:restaurants,slug|regex:/^[a-z0-9-]+$/',
+            'slug' => 'nullable|string|max:255|unique:restaurants,slug|unique:restaurant_slug_redirects,slug|regex:/^[a-z0-9-]+$/',
             'parent_id' => 'nullable|exists:restaurants,id',
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
@@ -166,7 +167,12 @@ $restaurants = Restaurant::whereNull('parent_id')
         $validated = $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:restaurants,slug,' . $restaurant->id . '|regex:/^[a-z0-9-]+$/',
+            'slug' => [
+                'nullable', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/',
+                Rule::unique('restaurants', 'slug')->ignore($restaurant->id),
+                // ما بنسمح ياخذ رابط قديم لمطعم ثاني عشان ما يخرب الـ QR المطبوع عنده
+                Rule::unique('restaurant_slug_redirects', 'slug')->where(fn ($q) => $q->where('restaurant_id', '!=', $restaurant->id)),
+            ],
             'parent_id' => 'nullable|exists:restaurants,id',
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',

@@ -418,6 +418,7 @@
                         <label class="form-label">{{ __('app.link') }}</label>
                         <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" value="{{ old('slug', $restaurant->slug) }}" style="direction: ltr;">
                         @error('slug')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <small class="text-muted">{{ __('app.slug_change_hint') }}</small>
                     </div>
                 </div>
 
