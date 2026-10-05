@@ -14,7 +14,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+    @php
+        $socialIcons = [
+            'facebook' => 'facebook-f', 'instagram' => 'instagram', 'twitter' => 'x-twitter', 'x' => 'x-twitter',
+            'tiktok' => 'tiktok', 'youtube' => 'youtube', 'snapchat' => 'snapchat-ghost',
+            'linkedin' => 'linkedin-in', 'telegram' => 'telegram-plane',
+        ];
+        // مكتبة Font Awesome بتنزل بس إذا في أيقونة مخصصة مش موجودة عندنا كـ SVG
+        $needsFontAwesome = $landingButtons->contains(fn ($b) => $b->type !== 'menu' && !\App\Support\Icons::has($b->icon ?? 'link'))
+            || ($restaurant->socialLinks && $restaurant->socialLinks->contains(fn ($s) => !isset($socialIcons[strtolower($s->platform)]) && strtolower($s->platform) !== 'whatsapp'));
+    @endphp
+    @if($needsFontAwesome)
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+    @endif
 
     @if($restaurant->isPdfMenu())
     {{-- معظم الزباين بيفتحوا المنيو: نجهّز مكتبة عرض الـ PDF بالخلفية بعد ما الصفحة تخلص --}}
@@ -41,6 +53,8 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        svg.icon { display: inline-block; height: 1em; vertical-align: -0.125em; overflow: visible; }
 
         body {
             font-family: 'Tajawal', sans-serif;
@@ -178,7 +192,7 @@
             font-size: 0.9rem;
         }
         
-        .rating-badge i { color: var(--primary); }
+        .rating-badge i, .rating-badge svg { color: var(--primary); }
         
         /* Links Section */
         .links-section {
@@ -404,7 +418,7 @@
             margin-bottom: 10px;
         }
         
-        .hours-title i { color: var(--primary); }
+        .hours-title i, .hours-title svg { color: var(--primary); }
         
         .hours-text {
             color: var(--text-light);
@@ -502,7 +516,7 @@
             margin-bottom: 12px;
         }
         
-        .branch-badge i { font-size: 0.7rem; }
+        .branch-badge i, .branch-badge svg { font-size: 0.7rem; }
     </style>
 </head>
 <body>
@@ -513,7 +527,7 @@
                 @csrf
                 <input type="hidden" name="locale" value="{{ $locale === 'ar' ? 'en' : 'ar' }}">
                 <button type="submit" class="lang-btn">
-                    <i class="fas fa-globe"></i>
+                    <x-icon name="globe" />
                     {{ $locale === 'ar' ? 'English' : 'العربية' }}
                 </button>
             </form>
@@ -526,7 +540,7 @@
                     <img src="{{ asset('storage/' . $restaurant->logo) }}" alt="{{ $restaurant->getName($locale) }}">
                 @else
                     <div class="logo-placeholder">
-                        <i class="fas fa-utensils"></i>
+                        <x-icon name="utensils" />
                     </div>
                 @endif
             </div>
@@ -537,7 +551,7 @@
             {{-- Branch Badge --}}
             @if($restaurant->parent_id)
             <div class="branch-badge">
-                <i class="fas fa-code-branch"></i>
+                <x-icon name="code-branch" />
                 {{ __('app.branch') }}
             </div>
             @endif
@@ -601,13 +615,17 @@
                             <div class="link-subtitle">{{ $button->getSubtitle($locale) }}</div>
                         </div>
                         <div class="link-arrow">
-                            <i class="fas fa-chevron-{{ $locale === 'ar' ? 'left' : 'right' }}"></i>
+                            <x-icon :name="'chevron-' . ($locale === 'ar' ? 'left' : 'right')" />
                         </div>
                     </a>
                     @else
                     <a href="{{ $buttonUrl }}" class="link-card" {{ $buttonTarget ? "target=$buttonTarget" : '' }}>
                         <div class="link-icon {{ $button->type }}">
-                            <i class="fas fa-{{ $button->icon ?? 'link' }}"></i>
+                            @if(\App\Support\Icons::has($button->icon ?? 'link'))
+                                <x-icon :name="$button->icon ?? 'link'" />
+                            @else
+                                <i class="fas fa-{{ $button->icon }}"></i>
+                            @endif
                         </div>
                         <div class="link-content">
                             <div class="link-title">{{ $button->getTitle($locale) }}</div>
@@ -619,7 +637,7 @@
                                 @endif
                             </div>
                         </div>
-                        <i class="fas fa-chevron-right link-arrow"></i>
+                        <x-icon name="chevron-right" class="link-arrow" />
                     </a>
                     @endif
                 @endif
@@ -635,20 +653,14 @@
                     @php
                         $platform = strtolower($social->platform);
                         if($platform === 'whatsapp') continue;
-                        $iconClass = match($platform) {
-                            'facebook' => 'fab fa-facebook-f',
-                            'instagram' => 'fab fa-instagram',
-                            'twitter', 'x' => 'fab fa-x-twitter',
-                            'tiktok' => 'fab fa-tiktok',
-                            'youtube' => 'fab fa-youtube',
-                            'snapchat' => 'fab fa-snapchat-ghost',
-                            'linkedin' => 'fab fa-linkedin-in',
-                            'telegram' => 'fab fa-telegram-plane',
-                            default => $social->icon ?? 'fas fa-link'
-                        };
+                        $iconName = $socialIcons[$platform] ?? null;
                     @endphp
                     <a href="{{ $social->url }}" target="_blank" class="social-link {{ $platform }}" title="{{ $social->platform }}">
-                        <i class="{{ $iconClass }}"></i>
+                        @if($iconName)
+                            <x-icon :name="$iconName" />
+                        @else
+                            <i class="{{ $social->icon ?? 'fas fa-link' }}"></i>
+                        @endif
                     </a>
                 @endforeach
             </div>
@@ -660,7 +672,7 @@
         <div class="hours-section">
             <div class="hours-card">
                 <div class="hours-title">
-                    <i class="fas fa-clock"></i>
+                    <x-icon name="clock" />
                     {{ $locale === 'ar' ? 'ساعات العمل' : 'Working Hours' }}
                 </div>
                 <div class="hours-text">{{ $restaurant->getWorkingHours($locale) }}</div>

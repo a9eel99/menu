@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     @php
         $settings = $restaurant->settings;
@@ -18,6 +17,8 @@
     @endphp
     
     <style>
+        svg.icon { display: inline-block; height: 1em; vertical-align: -0.125em; overflow: visible; }
+
         :root {
             --primary: {{ $primaryColor }};
             --text: #1a1a2e;
@@ -75,7 +76,7 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
         
-        .logo-placeholder i {
+        .logo-placeholder i, .logo-placeholder svg {
             font-size: 2.5rem;
             color: white;
         }
@@ -156,7 +157,7 @@
             color: var(--text-light);
         }
         
-        .branch-info-item i {
+        .branch-info-item i, .branch-info-item svg {
             width: 20px;
             color: var(--primary);
         }
@@ -217,7 +218,7 @@
                 <img src="{{ $restaurant->logo_url }}" alt="{{ $restaurant->getName() }}" class="logo">
             @else
                 <div class="logo-placeholder">
-                    <i class="fas fa-utensils"></i>
+                    <x-icon name="utensils" />
                 </div>
             @endif
             
@@ -242,27 +243,27 @@
                     <div class="branch-info">
                         @if($branch->getAddress())
                             <div class="branch-info-item">
-                                <i class="fas fa-map-marker-alt"></i>
+                                <x-icon name="map-marker-alt" />
                                 <span>{{ $branch->getAddress() }}</span>
                             </div>
                         @endif
                         
                         @if($branch->phone)
                             <div class="branch-info-item">
-                                <i class="fas fa-phone"></i>
+                                <x-icon name="phone" />
                                 <span>{{ $branch->phone }}</span>
                             </div>
                         @endif
                         
                         @if($branch->getWorkingHours())
                             <div class="branch-info-item">
-                                <i class="fas fa-clock"></i>
+                                <x-icon name="clock" />
                                 <span>{{ $branch->getWorkingHours() }}</span>
                             </div>
                         @endif
                     </div>
                     
-                    <i class="fas fa-arrow-{{ $locale === 'ar' ? 'left' : 'right' }} arrow-icon"></i>
+                    <x-icon :name="'arrow-' . ($locale === 'ar' ? 'left' : 'right')" class="arrow-icon" />
                 </a>
             @endforeach
         </div>

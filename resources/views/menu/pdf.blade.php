@@ -16,10 +16,11 @@
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js" as="script">
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        svg.icon { display: inline-block; height: 1em; vertical-align: -0.125em; overflow: visible; }
 
         html, body {
             height: 100%;
@@ -126,7 +127,7 @@
             padding: 40px;
         }
 
-        .loading i {
+        .loading i, .loading svg {
             font-size: 2rem;
             margin-bottom: 16px;
             animation: spin 1s linear infinite;
@@ -142,7 +143,7 @@
     <div class="container">
         <header class="header">
             <a href="{{ route('menu.landing', $restaurant->slug) }}" class="back-btn">
-                <i class="fas fa-arrow-right"></i>
+                <x-icon name="arrow-right" />
             </a>
             <div class="brand">
                 @if($restaurant->getLogoUrl())
@@ -154,13 +155,13 @@
                 </div>
             </div>
             <button onclick="shareMenu()" class="action-btn">
-                <i class="fas fa-share-alt"></i>
+                <x-icon name="share-alt" />
             </button>
         </header>
 
         <div class="pdf-viewer" id="viewer">
             <div class="loading">
-                <i class="fas fa-spinner"></i>
+                <x-icon name="spinner" />
                 <div>جاري تحميل القائمة...</div>
             </div>
         </div>
@@ -238,7 +239,7 @@
                 }, { root: viewer, rootMargin: '100% 0px' });
                 slots.slice(1).forEach((slot) => observer.observe(slot));
             } catch (error) {
-                viewer.innerHTML = '<div class="loading"><i class="fas fa-exclamation-triangle" style="animation:none;color:#ef4444;"></i><div>حدث خطأ في تحميل الملف</div><a href="' + pdfUrl + '" target="_blank" class="btn btn-primary" style="margin-top:16px;display:inline-flex;"><i class="fas fa-external-link-alt"></i> فتح الملف</a></div>';
+                viewer.innerHTML = '<div class="loading"><span style="color:#ef4444;font-size:2rem;">{!! \App\Support\Icons::svg('exclamation-triangle') !!}</span><div>حدث خطأ في تحميل الملف</div><a href="' + pdfUrl + '" target="_blank" class="btn btn-primary" style="margin-top:16px;display:inline-flex;">{!! \App\Support\Icons::svg('external-link-alt') !!} فتح الملف</a></div>';
             }
         }
 

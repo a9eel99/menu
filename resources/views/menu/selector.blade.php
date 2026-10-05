@@ -9,10 +9,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        svg.icon { display: inline-block; height: 1em; vertical-align: -0.125em; overflow: visible; }
 
         body {
             font-family: 'Tajawal', sans-serif;
@@ -94,7 +95,7 @@
             object-fit: cover;
         }
 
-        .restaurant-logo i {
+        .restaurant-logo i, .restaurant-logo svg {
             font-size: 2rem;
             color: #64748b;
         }
@@ -159,7 +160,7 @@
             @csrf
             <input type="hidden" name="locale" value="{{ $locale === 'ar' ? 'en' : 'ar' }}">
             <button type="submit" class="lang-btn">
-                <i class="fas fa-globe"></i>
+                <x-icon name="globe" />
                 {{ $locale === 'ar' ? 'English' : 'العربية' }}
             </button>
         </form>
@@ -178,7 +179,7 @@
                     @if($linked->logo)
                         <img src="{{ asset('storage/' . $linked->logo) }}" alt="{{ $linked->getName($locale) }}">
                     @else
-                        <i class="fas fa-utensils"></i>
+                        <x-icon name="utensils" />
                     @endif
                 </div>
                 <div class="restaurant-name">{{ $linked->getName($locale) }}</div>
