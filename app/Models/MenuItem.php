@@ -59,17 +59,25 @@ class MenuItem extends Model
         return $locale === 'ar' ? $this->description_ar : ($this->description_en ?: $this->description_ar);
     }
 
+    /** نتيجة فحص وجود الصورة على الهارد، عشان ما نفحصها أكثر من مرة لنفس الصنف */
+    private array $imageUrlCache = [];
+
     public function getImageUrl()
     {
-        if ($this->image && Storage::disk('public')->exists($this->image)) {
-            return asset('storage/' . $this->image);
+        $image = (string) $this->image;
+
+        if (!array_key_exists($image, $this->imageUrlCache)) {
+            $this->imageUrlCache[$image] = ($image !== '' && Storage::disk('public')->exists($image))
+                ? asset('storage/' . $image)
+                : null;
         }
-        return null;
+
+        return $this->imageUrlCache[$image];
     }
 
     public function hasImage()
     {
-        return $this->image && Storage::disk('public')->exists($this->image);
+        return $this->getImageUrl() !== null;
     }
 
     public function hasDiscount()

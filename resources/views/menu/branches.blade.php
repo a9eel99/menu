@@ -6,10 +6,11 @@
     <meta name="theme-color" content="{{ $restaurant->settings->primary_color ?? '#FF6B35' }}">
     <title>{{ $restaurant->getName() }} - {{ session('locale', 'ar') === 'ar' ? 'اختر الفرع' : 'Select Branch' }}</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    @include('menu.partials.tajawal', ['weights' => [400, 500, 700, 800]])
+    @if($locale !== 'ar')
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @endif
     
     @php
         $settings = $restaurant->settings;
@@ -18,6 +19,8 @@
     @endphp
     
     <style>
+        svg.icon { display: inline-block; height: 1em; vertical-align: -0.125em; overflow: visible; }
+
         :root {
             --primary: {{ $primaryColor }};
             --text: #1a1a2e;
@@ -75,7 +78,7 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
         
-        .logo-placeholder i {
+        .logo-placeholder i, .logo-placeholder svg {
             font-size: 2.5rem;
             color: white;
         }
@@ -156,7 +159,7 @@
             color: var(--text-light);
         }
         
-        .branch-info-item i {
+        .branch-info-item i, .branch-info-item svg {
             width: 20px;
             color: var(--primary);
         }
@@ -213,25 +216,25 @@
     
     <div class="container">
         <div class="header">
-            @if($restaurant->logo_url)
-                <img src="{{ $restaurant->logo_url }}" alt="{{ $restaurant->getName() }}" class="logo">
+            @if($restaurant->getLogoUrl())
+                <img src="{{ $restaurant->getLogoUrl() }}" alt="{{ $restaurant->getName($locale) }}" class="logo">
             @else
                 <div class="logo-placeholder">
-                    <i class="fas fa-utensils"></i>
+                    <x-icon name="utensils" />
                 </div>
             @endif
             
-            <h1 class="restaurant-name">{{ $restaurant->getName() }}</h1>
+            <h1 class="restaurant-name">{{ $restaurant->getName($locale) }}</h1>
             <p class="select-text">
                 {{ $locale === 'ar' ? 'اختر الفرع' : 'Select a Branch' }}
             </p>
         </div>
         
         <div class="branches-list">
-            @foreach($restaurant->branches as $branch)
-                <a href="{{ route('menu.branch', [$restaurant->slug, $branch->slug]) }}" class="branch-card {{ $branch->is_main ? 'main' : '' }}">
+            @foreach($restaurant->activeBranches as $branch)
+                <a href="{{ route('menu.landing', $branch->slug) }}" class="branch-card {{ $branch->is_main ? 'main' : '' }}">
                     <div class="branch-header">
-                        <span class="branch-name">{{ $branch->getName() }}</span>
+                        <span class="branch-name">{{ $branch->getName($locale) }}</span>
                         @if($branch->is_main)
                             <span class="main-badge">
                                 {{ $locale === 'ar' ? 'الرئيسي' : 'Main' }}
@@ -240,29 +243,29 @@
                     </div>
                     
                     <div class="branch-info">
-                        @if($branch->getAddress())
+                        @if($branch->getAddress($locale))
                             <div class="branch-info-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>{{ $branch->getAddress() }}</span>
+                                <x-icon name="map-marker-alt" />
+                                <span>{{ $branch->getAddress($locale) }}</span>
                             </div>
                         @endif
                         
                         @if($branch->phone)
                             <div class="branch-info-item">
-                                <i class="fas fa-phone"></i>
+                                <x-icon name="phone" />
                                 <span>{{ $branch->phone }}</span>
                             </div>
                         @endif
                         
-                        @if($branch->getWorkingHours())
+                        @if($branch->getWorkingHours($locale))
                             <div class="branch-info-item">
-                                <i class="fas fa-clock"></i>
-                                <span>{{ $branch->getWorkingHours() }}</span>
+                                <x-icon name="clock" />
+                                <span>{{ $branch->getWorkingHours($locale) }}</span>
                             </div>
                         @endif
                     </div>
                     
-                    <i class="fas fa-arrow-{{ $locale === 'ar' ? 'left' : 'right' }} arrow-icon"></i>
+                    <x-icon :name="'arrow-' . ($locale === 'ar' ? 'left' : 'right')" class="arrow-icon" />
                 </a>
             @endforeach
         </div>

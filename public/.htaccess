@@ -53,4 +53,9 @@
     ExpiresByType text/css "access plus 1 month"
     ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType image/x-icon "access plus 1 year"
+    # ملفات المنيو PDF: كل ملف بينرفع باسم جديد، فالكاش الطويل آمن
+    ExpiresByType application/pdf "access plus 1 year"
+    # الخطوط (public/fonts)
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
 </IfModule>
