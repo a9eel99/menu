@@ -6,9 +6,11 @@
     <meta name="theme-color" content="{{ $restaurant->settings->primary_color ?? '#FF6B35' }}">
     <title>{{ $restaurant->getName() }} - {{ session('locale', 'ar') === 'ar' ? 'اختر الفرع' : 'Select Branch' }}</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    @include('menu.partials.tajawal', ['weights' => [400, 500, 700, 800]])
+    @if($locale !== 'ar')
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @endif
     
     @php
         $settings = $restaurant->settings;

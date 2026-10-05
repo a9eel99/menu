@@ -11,9 +11,7 @@
     <link rel="icon" href="{{ asset('storage/' . $restaurant->logo) }}" type="image/png">
     @endif
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+    @include('menu.partials.tajawal', ['weights' => [500, 700]])
     @php
         $socialIcons = [
             'facebook' => 'facebook-f', 'instagram' => 'instagram', 'twitter' => 'x-twitter', 'x' => 'x-twitter',

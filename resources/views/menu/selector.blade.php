@@ -6,9 +6,7 @@
     <meta name="theme-color" content="#1a1a2e">
     <title>{{ $locale === 'ar' ? 'اختر المطعم' : 'Select Restaurant' }}</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    @include('menu.partials.tajawal', ['weights' => [400, 500, 700, 800]])
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
