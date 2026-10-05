@@ -10,6 +10,18 @@
     <link rel="icon" href="{{ asset('storage/' . $restaurant->logo) }}" type="image/png">
     @endif
 
+    {{-- نبلش ننزل ملف المنيو ومكتبة PDF.js فوراً وبالتوازي، بدل ما الملف يستنى المكتبة تخلص --}}
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" as="script">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js" as="script">
+    <script>
+        window.menuPdfData = fetch(@json($restaurant->getMenuPdfUrl())).then(function (r) {
+            if (!r.ok) throw new Error('PDF ' + r.status);
+            return r.arrayBuffer();
+        });
+        window.menuPdfData.catch(function () {});
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -168,7 +180,12 @@
 
         async function loadPDF() {
             try {
-                const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+                // الملف بلّش ينزل من الـ head، وإذا فشل نرجع للطريقة العادية
+                let source = pdfUrl;
+                try {
+                    source = { data: await window.menuPdfData };
+                } catch (e) {}
+                const pdf = await pdfjsLib.getDocument(source).promise;
                 viewer.innerHTML = '';
 
                 for (let i = 1; i <= pdf.numPages; i++) {
