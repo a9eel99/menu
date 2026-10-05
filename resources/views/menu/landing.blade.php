@@ -27,9 +27,13 @@
     @endif
 
     @if($restaurant->isPdfMenu())
-    {{-- معظم الزباين بيفتحوا المنيو: نجهّز مكتبة عرض الـ PDF بالخلفية بعد ما الصفحة تخلص --}}
+    {{-- معظم الزباين بيفتحوا المنيو: نجهّز أول صفحة منه (أو مكتبة عرض الـ PDF) بالخلفية بعد ما الصفحة تخلص --}}
+    @if($restaurant->hasMenuPageImages())
+    <link rel="prefetch" href="{{ $restaurant->getMenuPageImages()[0]['url'] }}">
+    @else
     <link rel="prefetch" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
     <link rel="prefetch" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js">
+    @endif
     @endif
     
     @php

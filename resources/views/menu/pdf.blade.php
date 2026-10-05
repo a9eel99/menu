@@ -10,10 +10,15 @@
     <link rel="icon" href="{{ asset('storage/' . $restaurant->logo) }}" type="image/png">
     @endif
 
+    {{-- إذا صفحات المنيو محوّلة لصور بنعرضها مباشرة، وإلا بنرسم الـ PDF بمكتبة PDF.js --}}
+    @php($pageImages = $restaurant->getMenuPageImages())
+
+    @if(!$pageImages)
     {{-- نبلش ننزل مكتبة PDF.js فوراً بدل ما تستنى آخر الصفحة --}}
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" as="script">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js" as="script">
+    @endif
 
     @include('menu.partials.tajawal', ['weights' => [500, 700]])
 
@@ -115,7 +120,8 @@
             overflow: hidden;
         }
 
-        .pdf-page canvas {
+        .pdf-page canvas,
+        .pdf-page img {
             display: block;
             width: 100%;
             height: auto;
@@ -160,14 +166,26 @@
         </header>
 
         <div class="pdf-viewer" id="viewer">
+            @if($pageImages)
+                {{-- أول صفحة بتنزل فوراً، والباقي لما الزبون يقرب يوصلها --}}
+                @foreach($pageImages as $i => $page)
+                    <div class="pdf-page">
+                        <img src="{{ $page['url'] }}" width="{{ $page['width'] }}" height="{{ $page['height'] }}"
+                            alt="{{ $restaurant->name_ar }} - صفحة {{ $i + 1 }}"
+                            @if($i === 0) fetchpriority="high" @else loading="lazy" decoding="async" @endif>
+                    </div>
+                @endforeach
+            @else
             <div class="loading">
                 <x-icon name="spinner" />
                 <div>جاري تحميل القائمة...</div>
             </div>
+            @endif
         </div>
 
             </div>
 
+    @if(!$pageImages)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -244,6 +262,10 @@
         }
 
         loadPDF();
+    </script>
+    @endif
+
+    <script>
 
         function shareMenu() {
             if (navigator.share) {
