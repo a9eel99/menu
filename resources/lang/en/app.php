@@ -307,7 +307,7 @@ return [
     'admin_label_placeholder' => 'e.g. Irbid',
     'admin_label_hint' => 'Only shown in the admin panel',
     'review_prompt' => 'Ask customers for a Google review on the menu page',
-    'review_prompt_hint' => 'Shown once per customer every 30 days: when they reach the end of the menu or after two minutes. Needs a Google Reviews URL.',
+    'review_prompt_hint' => 'Shown once per customer every 30 days: when they reach page 3 of the menu, its end, or after two minutes. Needs a Google Reviews URL.',
     'images' => 'Images',
     'remove_image' => 'Remove Image',
     'currency_sar' => 'Saudi Riyal',

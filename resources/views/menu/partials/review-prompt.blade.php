@@ -1,9 +1,11 @@
 {{--
     بطاقة "قيّمنا على Google" بصفحة المنيو. بتطلع مرة وحدة لكل زبون (كل 30 يوم)
-    لما يوصل آخر المنيو أو بعد دقيقتين، أيهم أول. ما بتسكّر المنيو، بتطلع من تحت الشاشة.
+    لما يوصل صفحة معيّنة من منيو الـ PDF، أو آخر المنيو، أو بعد دقيقتين، أيهم أول.
+    ما بتسكّر المنيو، بتطلع من تحت الشاشة.
     طلب عادي بيودّي لصفحة التقييم مباشرة (بدون فلترة حسب رأي الزبون، حسب قوانين Google).
 
-    المتغيرات: $restaurant، $locale ('ar' أو 'en')، $scroller (عنصر السكرول، أو null للصفحة كلها)
+    المتغيرات: $restaurant، $locale ('ar' أو 'en')، $scroller (عنصر السكرول، أو null للصفحة كلها)،
+    $triggerPage (رقم صفحة منيو الـ PDF اللي بتطلع عندها، اختياري)
 --}}
 @if($restaurant->showsReviewPrompt())
 @php
@@ -69,6 +71,7 @@
     var card = document.getElementById('reviewPrompt');
     var scroller = {!! $scroller ? 'document.querySelector(' . json_encode($scroller) . ')' : 'null' !!};
     var target = scroller || window;
+    var TRIGGER_PAGE = {{ (int) ($triggerPage ?? 0) }}; // 0 = بدون شرط الصفحة
     var shown = false, timer;
 
     function atEnd() {
@@ -77,7 +80,14 @@
         return window.scrollY > 0 && window.scrollY + window.innerHeight >= doc.scrollHeight - 150;
     }
 
-    function onScroll() { if (atEnd()) show(); }
+    // الزبون وصل الصفحة المطلوبة: صارت مغطية نص الشاشة على الأقل
+    function atTriggerPage() {
+        if (!TRIGGER_PAGE) return false;
+        var page = document.querySelectorAll('.pdf-page')[TRIGGER_PAGE - 1];
+        return !!page && page.getBoundingClientRect().top < window.innerHeight * 0.5;
+    }
+
+    function onScroll() { if (atTriggerPage() || atEnd()) show(); }
 
     function show() {
         if (shown) return;

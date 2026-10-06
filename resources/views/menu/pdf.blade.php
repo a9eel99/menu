@@ -265,7 +265,7 @@
     </script>
     @endif
 
-    @include('menu.partials.review-prompt', ['locale' => 'ar', 'scroller' => '#viewer'])
+    @include('menu.partials.review-prompt', ['locale' => 'ar', 'scroller' => '#viewer', 'triggerPage' => 3])
 
     <script>
 
