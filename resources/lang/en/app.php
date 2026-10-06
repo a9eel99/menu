@@ -303,6 +303,8 @@ return [
     'working_hours_en' => 'Working Hours (English)',
     'working_hours_placeholder' => 'e.g. 9 AM - 11 PM',
     'google_reviews' => 'Google Reviews URL',
+    'review_prompt' => 'Ask customers for a Google review on the menu page',
+    'review_prompt_hint' => 'Shown once per customer every 30 days: when they reach the end of the menu or after two minutes. Needs a Google Reviews URL.',
     'images' => 'Images',
     'remove_image' => 'Remove Image',
     'currency_sar' => 'Saudi Riyal',

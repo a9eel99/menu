@@ -39,12 +39,14 @@ class Restaurant extends Model
         'menu_type',
         'menu_pdf',
         'menu_pages',
+        'review_prompt_enabled',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'show_linked_selector' => 'boolean',
         'menu_pages' => 'array',
+        'review_prompt_enabled' => 'boolean',
     ];
 
     protected $attributes = [
@@ -318,6 +320,14 @@ class Restaurant extends Model
             'width' => $page['width'],
             'height' => $page['height'],
         ], $this->menu_pages ?? []);
+    }
+
+    /**
+     * بطاقة "قيّمنا على Google" بصفحة المنيو: لازم تكون مفعّلة ويكون في رابط تقييم
+     */
+    public function showsReviewPrompt(): bool
+    {
+        return $this->review_prompt_enabled && !empty($this->google_reviews_url);
     }
 
     public function hasMenuPageImages(): bool

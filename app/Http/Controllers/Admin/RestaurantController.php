@@ -95,6 +95,7 @@ $restaurants = Restaurant::whereNull('parent_id')
 
         $validated['user_id'] = Auth::id();
         $validated['is_active'] = $request->has('is_active');
+        $validated['review_prompt_enabled'] = $request->has('review_prompt_enabled');
         $validated['menu_type'] = $request->input('menu_type', 'digital');
 
         // رفع الصور مع الضغط
@@ -216,6 +217,7 @@ $restaurants = Restaurant::whereNull('parent_id')
         }
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['review_prompt_enabled'] = $request->has('review_prompt_enabled');
 
         // رفع الصور مع الضغط
         if ($request->hasFile('logo')) {
