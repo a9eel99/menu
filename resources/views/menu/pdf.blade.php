@@ -265,6 +265,8 @@
     </script>
     @endif
 
+    @include('menu.partials.review-prompt', ['locale' => 'ar', 'scroller' => '#viewer'])
+
     <script>
 
         function shareMenu() {

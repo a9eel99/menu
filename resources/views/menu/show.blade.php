@@ -667,5 +667,6 @@
             });
         });
     </script>
+    @include('menu.partials.review-prompt', ['scroller' => null])
 </body>
 </html>

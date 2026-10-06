@@ -394,6 +394,15 @@
                         <input type="url" name="google_reviews_url" class="form-control" value="{{ old('google_reviews_url') }}" placeholder="https://g.page/...">
                     </div>
                 </div>
+                <div class="switch-wrapper" style="margin-top: 0;">
+                    <div class="form-check form-switch mb-0">
+                        <input type="checkbox" name="review_prompt_enabled" class="form-check-input" id="review_prompt_enabled" value="1" {{ old('review_prompt_enabled') ? 'checked' : '' }}>
+                    </div>
+                    <label for="review_prompt_enabled">
+                        {{ __('app.review_prompt') }}
+                        <small class="d-block text-muted">{{ __('app.review_prompt_hint') }}</small>
+                    </label>
+                </div>
             </div>
         </div>
 
