@@ -515,6 +515,7 @@
                     <div class="restaurant-details">
                         <h4>
                             {{ app()->getLocale() == 'ar' ? $restaurant->name_ar : $restaurant->name_en }}
+                            @if($restaurant->admin_label)<small class="admin-label">{{ $restaurant->admin_label }}</small>@endif
                             <span class="main-badge">{{ __('app.main_restaurant') }}</span>
                         </h4>
                         <p class="subtitle">{{ app()->getLocale() == 'ar' ? $restaurant->name_en : $restaurant->name_ar }}</p>
@@ -593,7 +594,7 @@
                                     @endif
                                 </div>
                                 <div>
-                                    <div class="branch-name">{{ app()->getLocale() == 'ar' ? $branch->name_ar : $branch->name_en }}</div>
+                                    <div class="branch-name">{{ app()->getLocale() == 'ar' ? $branch->name_ar : $branch->name_en }} @if($branch->admin_label)<small class="admin-label">{{ $branch->admin_label }}</small>@endif</div>
                                     <div class="branch-name-secondary">{{ app()->getLocale() == 'ar' ? $branch->name_en : $branch->name_ar }}</div>
                                 </div>
                             </div>

@@ -159,7 +159,7 @@
     <div class="qr-card">
         <div class="card-header">
             <i class="fas fa-qrcode"></i>
-            <h3>{{ $restaurant->getName() }}</h3>
+            <h3>{{ $restaurant->getName() }} @if($restaurant->admin_label)<small class="admin-label">{{ $restaurant->admin_label }}</small>@endif</h3>
         </div>
 
         <div class="qr-preview">

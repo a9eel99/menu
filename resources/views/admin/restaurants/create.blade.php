@@ -328,6 +328,14 @@
                         @error('slug')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-5 mb-3">
+                        <label class="form-label">{{ __('app.admin_label') }} <small class="text-muted">({{ __('app.admin_label_hint') }})</small></label>
+                        <input type="text" name="admin_label" class="form-control @error('admin_label') is-invalid @enderror" value="{{ old('admin_label') }}" placeholder="{{ __('app.admin_label_placeholder') }}" maxlength="60">
+                        @error('admin_label')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                </div>
                 
                 <div class="row">
                     <div class="col-md-6 mb-3">

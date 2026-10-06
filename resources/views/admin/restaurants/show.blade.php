@@ -788,6 +788,7 @@
         <div class="hero-info">
             <h1 class="hero-title">
                 {{ app()->getLocale() == 'ar' ? $restaurant->name_ar : $restaurant->name_en }}
+                @if($restaurant->admin_label)<small class="admin-label">{{ $restaurant->admin_label }}</small>@endif
                 @if($restaurant->isBranch())
                     <span class="branch-badge">{{ __('app.branch') }}</span>
                 @endif
