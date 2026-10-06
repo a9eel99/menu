@@ -35,6 +35,13 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/css/components.css') }}">
     
     <style>
+        /* الاسم التمييزي للمطعم (مثلاً: إربد) */
+        .admin-label {
+            display: inline-block; margin-inline-start: 6px; padding: 1px 8px; border-radius: 999px;
+            font-size: 0.72rem; font-weight: 600; line-height: 1.6; vertical-align: middle;
+            background: rgba(148, 163, 184, 0.22); color: inherit; white-space: nowrap;
+        }
+
         :root {
             --primary: {{ $primaryColor }};
             --primary-light: {{ $primaryColor }}15;
@@ -154,14 +161,14 @@
                         @else
                             <div class="placeholder-img"><i class="fas fa-store"></i></div>
                         @endif
-                        <span class="name">{{ app()->getLocale() == 'ar' ? $restaurant->name_ar : $restaurant->name_en }}</span>
+                        <span class="name">{{ app()->getLocale() == 'ar' ? $restaurant->name_ar : $restaurant->name_en }} @if($restaurant->admin_label)<small class="admin-label">{{ $restaurant->admin_label }}</small>@endif</span>
                     </a>
                     
                     @foreach($restaurant->branches as $branch)
                         <a href="{{ route('admin.restaurants.show', $branch) }}" 
                            class="restaurant-link branch-link {{ $currentRestaurant && $currentRestaurant->id == $branch->id ? 'active' : '' }}">
                             <i class="fas fa-code-branch"></i>
-                            <span class="name">{{ app()->getLocale() == 'ar' ? $branch->name_ar : $branch->name_en }}</span>
+                            <span class="name">{{ app()->getLocale() == 'ar' ? $branch->name_ar : $branch->name_en }} @if($branch->admin_label)<small class="admin-label">{{ $branch->admin_label }}</small>@endif</span>
                         </a>
                     @endforeach
                 </div>

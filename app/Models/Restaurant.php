@@ -17,6 +17,7 @@ class Restaurant extends Model
         'show_linked_selector',
         'name_ar',
         'name_en',
+        'admin_label',
         'slug',
         'description_ar',
         'description_en',
